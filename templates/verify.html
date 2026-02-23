@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="card-header bg-success text-white">
+                <h4 class="mb-0">Verify Document Authenticity</h4>
+            </div>
+            <div class="card-body">
+                <form action="/verify" method="POST" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="document" class="form-label">Upload Document to Verify</label>
+                        <input class="form-control" type="file" id="document" name="document" required>
+                    </div>
+                    <button type="submit" class="btn btn-success d-block w-100">Verify Integrity against
+                        Blockchain</button>
+                </form>
+            </div>
+        </div>
+
+        {% if calculated_hash %}
+        <div class="mt-4">
+            {% if matching_block %}
+            <div class="alert alert-success mt-4 shadow-sm" role="alert">
+                <h4 class="alert-heading fw-bold mb-2">
+                    <span class="badge bg-success me-2">VERIFIED</span> Document is Authentic
+                </h4>
+                <p class="mb-0">This document is identical to the one issued by <strong>{{ matching_block.issuer
+                        }}</strong> on {{ issued_date }}.</p>
+            </div>
+
+            <div class="card border-success shadow-sm overflow-hidden">
+                <div class="card-body p-4 p-md-5">
+                    <h5 class="card-title text-success fw-bold text-uppercase mb-4">Official Verification Details</h5>
+
+                    <div class="row align-items-center">
+                        <div class="col-md-7 mb-4 mb-md-0">
+                            <h6 class="text-muted fw-bold mb-1 text-uppercase small">Holder's Name</h6>
+                            <p class="fs-5 fw-bold text-dark">{{ matching_block.student_name }}</p>
+
+                            <h6 class="text-muted fw-bold mb-1 mt-3 text-uppercase small">Certificate ID</h6>
+                            <p class="fs-5 text-dark font-monospace">{{ matching_block.cert_id }}</p>
+
+                            <h6 class="text-muted fw-bold mb-1 mt-3 text-uppercase small">Authorized Issuer</h6>
+                            <p class="fs-5 text-dark">{{ matching_block.issuer }}</p>
+
+                            <div class="row mt-3">
+                                <div class="col-6">
+                                    <h6 class="text-muted fw-bold mb-1 text-uppercase small">Issued On</h6>
+                                    <p class="fs-5 text-dark">{{ issued_date }}</p>
+                                </div>
+                                <div class="col-6">
+                                    <h6 class="text-muted fw-bold mb-1 text-uppercase small">Validity Status</h6>
+                                    <p class="fs-5 text-dark"><span class="badge bg-primary px-3 py-2">{{
+                                            matching_block.validity }}</span></p>
+                                </div>
+                            </div>
+
+                            <h6 class="text-muted fw-bold mb-1 mt-3 text-uppercase small">Document Type</h6>
+                            <p class="fs-5 text-dark">{{ matching_block.document_type }}</p>
+                        </div>
+                        <div class="col-md-5 text-center">
+                            <div class="mb-3">
+                                {% if matching_block.student_image %}
+                                <!-- Actual Immutable Photo from Blockchain -->
+                                <img src="{{ url_for('static', filename='uploads/' + matching_block.student_image) }}"
+                                    alt="Holder Photo" class="img-thumbnail rounded-4 shadow-sm"
+                                    style="width: 120px; height: 120px; object-fit: cover;">
+                                {% else %}
+                                <!-- Generic Offline Avatar Placeholder -->
+                                <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" fill="var(--bs-gray-400)"
+                                    class="bi bi-person-bounding-box" viewBox="0 0 16 16">
+                                    <path
+                                        d="M1.5 1a.5.5 0 0 0-.5.5v3a.5.5 0 0 1-1 0v-3A1.5 1.5 0 0 1 1.5 0h3a.5.5 0 0 1 0 1h-3zM11 .5a.5.5 0 0 1 .5-.5h3A1.5 1.5 0 0 1 16 1.5v3a.5.5 0 0 1-1 0v-3a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 1-.5-.5zM.5 11a.5.5 0 0 1 .5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 1 0 1h-3A1.5 1.5 0 0 1 0 14.5v-3a.5.5 0 0 1 .5-.5zm15 0a.5.5 0 0 1 .5.5v3a1.5 1.5 0 0 1-1.5 1.5h-3a.5.5 0 0 1 0-1h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 1 .5-.5z" />
+                                    <path
+                                        d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm8-9a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
+                                </svg>
+                                {% endif %}
+                            </div>
+                            {% if qr_base64 %}
+                            <div
+                                class="bg-light border border-2 border-white p-2 rounded-4 shadow-sm d-inline-block mt-2">
+                                <img src="data:image/svg+xml;base64,{{ qr_base64 }}" alt="QR Code" class="img-fluid"
+                                    style="max-width: 160px;">
+                            </div>
+                            <div class="mt-2 text-muted small fw-bold text-uppercase">Scan for Digital Verification
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <hr class="my-4 border-success opacity-25">
+
+                    <div class="row bg-light rounded-3 p-3 mx-0">
+                        <div class="col-12">
+                            <p class="mb-1 fw-bold text-secondary text-uppercase small">Calculated Hash (Upload)</p>
+                            <div class="hash-text match text-break p-2 rounded-3 bg-white border">{{ calculated_hash }}
+                            </div>
+                        </div>
+
+                        <div class="col-12 mt-3">
+                            <p class="mb-1 fw-bold text-secondary text-uppercase small">Anchored Hash (Blockchain)</p>
+                            <div class="hash-text match text-break p-2 rounded-3 bg-white border">{{
+                                matching_block.document_hash }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <div class="alert alert-danger mt-4 shadow-sm" role="alert">
+                <h4 class="alert-heading fw-bold mb-2">
+                    <span class="badge bg-danger me-2">TAMPERED OR NOT ISSUED</span> Verification Failed
+                </h4>
+                <p class="mb-0">This document has either been modified or was never securely issued on the blockchain.
+                </p>
+            </div>
+
+            <div class="card border-danger shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title text-danger fw-bold">Hash Mismatch Detected</h5>
+                    <hr>
+                    <p>No matching cryptographic record could be found for this document's digital signature.</p>
+
+                    <div class="mt-4">
+                        <p class="mb-1 fw-bold text-danger">Calculated Hash (From Uploaded File):</p>
+                        <div class="hash-text mismatch text-break p-2 rounded">{{ calculated_hash }}</div>
+                    </div>
+
+                    <p class="mt-3 text-muted small"><i class="bi bi-info-circle"></i> A file's SHA-256 hash changes
+                        completely even if a single space or character is altered.</p>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

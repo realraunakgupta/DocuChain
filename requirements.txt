@@ -1,0 +1,5 @@
+Flask
+PyQRCode
+Werkzeug
+reportlab
+gunicorn

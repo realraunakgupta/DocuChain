@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row justify-content-center animate-fade-in-up">
+    <div class="col-md-10 col-lg-8">
+        <div class="d-flex justify-content-between align-items-center mb-4 mt-2">
+            <div>
+                <a href="{{ url_for('dashboard') if session.get('user') else url_for('index') }}"
+                    class="btn btn-sm btn-outline-secondary rounded-pill mb-2">
+                    <i class="bi bi-arrow-left"></i> Back
+                </a>
+                <h3 class="fw-bold mb-0">Document Integrity Record</h3>
+            </div>
+            <div class="text-end">
+                <span class="badge bg-success fs-6"><i class="bi bi-check-circle-fill me-1"></i> VERIFIED ON
+                    BLOCKCHAIN</span>
+                <p class="text-muted small mb-0 mt-1">Block #{{ matching_block.index }} • {{ issued_date }}
+                </p>
+            </div>
+        </div>
+
+        <div class="card border-success shadow-lg overflow-hidden rounded-4">
+            <div class="card-body p-4 p-md-5">
+                <div class="row align-items-center">
+                    <div class="col-md-7 mb-4 mb-md-0">
+                        <h6 class="text-muted fw-bold mb-1 text-uppercase small">Holder's Name</h6>
+                        <p class="fs-4 fw-bold text-dark">{{ matching_block.student_name }}</p>
+
+                        <h6 class="text-muted fw-bold mb-1 mt-4 text-uppercase small">Certificate ID</h6>
+                        <p class="fs-5 text-dark font-monospace">{{ matching_block.cert_id }}</p>
+
+                        <div class="row mt-4">
+                            <div class="col-6">
+                                <h6 class="text-muted fw-bold mb-1 text-uppercase small">Issued On</h6>
+                                <p class="fs-5 text-dark">{{ issued_date }}</p>
+                            </div>
+                            <div class="col-6">
+                                <h6 class="text-muted fw-bold mb-1 text-uppercase small">Validity Status</h6>
+                                <p class="fs-5 text-dark"><span class="badge bg-primary px-3 py-2">{{
+                                        matching_block.validity
+                                        }}</span></p>
+                            </div>
+                        </div>
+
+                        <h6 class="text-muted fw-bold mb-1 mt-4 text-uppercase small">Authorized Issuer</h6>
+                        <p class="fs-5 text-dark">{{ matching_block.issuer }}</p>
+
+                        <h6 class="text-muted fw-bold mb-1 mt-4 text-uppercase small">Document Type</h6>
+                        <p class="fs-5 text-dark">{{ matching_block.document_type }}</p>
+                    </div>
+
+                    <div class="col-md-5 text-center bg-light rounded-4 p-4 border">
+                        <div class="mb-4">
+                            {% if matching_block.student_image %}
+                            <!-- Actual Immutable Photo from Blockchain -->
+                            <img src="{{ url_for('static', filename='uploads/' + matching_block.student_image) }}"
+                                alt="Holder Photo" class="img-thumbnail rounded-circle shadow-sm"
+                                style="width: 140px; height: 140px; object-fit: cover; border: 4px solid white;">
+                            {% else %}
+                            <!-- Generic Offline Avatar Placeholder -->
+                            <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" fill="var(--bs-gray-400)"
+                                class="bi bi-person-bounding-box" viewBox="0 0 16 16">
+                                <path
+                                    d="M1.5 1a.5.5 0 0 0-.5.5v3a.5.5 0 0 1-1 0v-3A1.5 1.5 0 0 1 1.5 0h3a.5.5 0 0 1 0 1h-3zM11 .5a.5.5 0 0 1 .5-.5h3A1.5 1.5 0 0 1 16 1.5v3a.5.5 0 0 1-1 0v-3a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 1-.5-.5zM.5 11a.5.5 0 0 1 .5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 1 0 1h-3A1.5 1.5 0 0 1 0 14.5v-3a.5.5 0 0 1 .5-.5zm15 0a.5.5 0 0 1 .5.5v3a1.5 1.5 0 0 1-1.5 1.5h-3a.5.5 0 0 1 0-1h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 1 .5-.5z" />
+                                <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm8-9a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
+                            </svg>
+                            {% endif %}
+                        </div>
+
+                        {% if qr_base64 %}
+                        <div class="bg-white border rounded-4 shadow-sm d-inline-block p-2">
+                            <img src="data:image/svg+xml;base64,{{ qr_base64 }}" alt="QR Code" class="img-fluid"
+                                style="max-width: 150px;">
+                        </div>
+                        <div class="mt-2 text-primary small fw-bold text-uppercase"><i
+                                class="bi bi-qr-code-scan me-1"></i> Scan for Verification</div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <hr class="my-5 border-success opacity-25">
+
+                <div class="bg-dark text-white rounded-4 p-4 mx-0 shadow-sm relative overflow-hidden">
+                    <div class="position-absolute top-0 end-0 opacity-10 p-3">
+                        <i class="bi bi-shield-lock-fill" style="font-size: 8rem;"></i>
+                    </div>
+                    <div class="position-relative z-1">
+                        <p class="mb-2 fw-bold text-success text-uppercase small"><i class="bi bi-link-45deg me-1"></i>
+                            Permanent Blockchain Ledger Anchor</p>
+                        <p class="mb-0 text-white-50 small">Every single pixel of this document, photograph, and
+                            metadata is permanently locked to this cryptographic signature.</p>
+                        <div class="font-monospace text-break p-3 rounded-3 bg-black border border-secondary mt-3 fs-6">
+                            {{ matching_block.document_hash }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

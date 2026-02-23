@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row justify-content-center animate-fade-in-up mt-2">
+    <div class="col-md-8 col-lg-6">
+        <div class="card shadow-sm border-0 rounded-4">
+            <div class="card-body p-4 p-md-5 text-center">
+                <h3 class="fw-bold mb-4">Immutable Identity Verification</h3>
+
+                <div class="mb-4">
+                    {% if user_data and user_data.get('avatar') %}
+                    <img src="/static/uploads/{{ user_data.get('avatar') }}" alt="Current Profile"
+                        class="rounded-circle border border-3 border-primary shadow-sm"
+                        style="width: 150px; height: 150px; object-fit: cover;">
+                    <p class="text-secondary mt-3 small"><i class="bi bi-check-circle-fill text-success"></i> This
+                        verified photo will be permanently cryptographically signed to all future documents.</p>
+                    {% else %}
+                    <div class="rounded-circle bg-light d-flex align-items-center justify-content-center mx-auto border border-dashed border-2 text-muted"
+                        style="width: 150px; height: 150px;">
+                        <i class="bi bi-person-fill" style="font-size: 5rem;"></i>
+                    </div>
+                    <p class="text-danger mt-3 small fw-bold"><i class="bi bi-exclamation-triangle-fill"></i> No
+                        identity photo set. Upload one to establish your verified digital identity!</p>
+                    {% endif %}
+                </div>
+
+                <form action="/profile" method="POST" enctype="multipart/form-data">
+                    <div class="mb-4 text-start">
+                        <label for="avatar" class="form-label fw-bold">Upload your Immutable Profile Picture</label>
+                        <input class="form-control bg-light" type="file" id="avatar" name="avatar" accept="image/*"
+                            required>
+                        <div class="form-text text-warning mt-2 fw-bold"><i class="bi bi-shield-lock-fill"></i> Security
+                            Lockout Policy: To prevent identity fraud, you may only alter your immutable profile image
+                            once every 60 days.</div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-lg w-100 rounded-pill fw-bold shadow-sm">
+                        <i class="bi bi-cloud-arrow-up-fill me-1"></i> Register Digital Identity
+                    </button>
+                    <a href="/dashboard" class="btn btn-outline-secondary w-100 rounded-pill fw-bold mt-3">
+                        Return to Dashboard
+                    </a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row align-items-center mb-4">
+    <div class="col-md-8">
+        <h2 class="fw-bold">Blockchain Explorer</h2>
+        <p class="text-muted mb-0">Auditing the immutable ledger in real-time.</p>
+    </div>
+    <div class="col-md-4 text-md-end mt-3 mt-md-0">
+        {% if is_valid %}
+        <button class="btn btn-lg btn-success w-100" disabled>Integrity Status: VERIFIED</button>
+        {% else %}
+        <button class="btn btn-lg btn-danger w-100" disabled>Integrity Status: BROKEN</button>
+        {% endif %}
+    </div>
+</div>
+
+{% if not is_valid %}
+<div class="alert alert-danger fw-bold shadow-sm">
+    ⚠ WARNING: The blockchain has been tampered with. One or more blocks have invalid hashes. Cryptographic trust is
+    broken!
+</div>
+{% endif %}
+
+<div class="row">
+    <div class="col-12 text-center mb-4 text-muted">
+        <small>Latest Blocks (Top) ← Genesis Block (Bottom)</small>
+    </div>
+
+    <!-- Render blocks in reverse for better UX: latest first -->
+    {% for block in chain|reverse %}
+    <div class="col-12">
+        <div class="card shadow-sm mb-4 border-{{ 'primary' if block.index == 0 else 'secondary' }}">
+            <div
+                class="card-header d-flex justify-content-between align-items-center {{ 'bg-primary text-white' if block.index == 0 else 'bg-light' }}">
+                <h5 class="mb-0 fw-bold">
+                    Block #{{ block.index }}
+                    {% if block.index == 0 %}<span class="badge bg-light text-primary ms-2">Genesis Block</span>{% endif
+                    %}
+                </h5>
+                <span class="badge bg-secondary">{{ block.document_type }}</span>
+            </div>
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-md-6 border-end">
+                        <p class="mb-1 text-muted small text-uppercase fw-bold">Issuer</p>
+                        <p class="mb-0 fs-5">{{ block.issuer }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="mb-1 text-muted small text-uppercase fw-bold">Timestamp</p>
+                        <p class="mb-0">{{ block.formatted_timestamp }}</p>
+                    </div>
+                </div>
+
+                <div class="bg-light p-3 rounded">
+                    <p class="mb-1 fw-bold small text-muted text-uppercase">Document Content Hash</p>
+                    <div class="hash-text bg-white border p-1 rounded mb-3 text-break" style="font-size:0.9rem;">
+                        {{ block.document_hash }}
+                    </div>
+
+                    <p class="mb-1 fw-bold small text-success text-uppercase">Block Hash (Self)</p>
+                    <div class="hash-text match p-1 rounded mb-3 text-break" style="font-size:0.9rem;">
+                        {{ block.block_hash }}
+                    </div>
+
+                    <p class="mb-1 fw-bold small text-muted text-uppercase">Previous Block Hash (Link)</p>
+                    <div class="hash-text bg-white border p-1 rounded text-break" style="font-size:0.9rem;">
+                        {{ block.previous_hash }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% if not loop.last %}
+        <div class="text-center mb-4">
+            <!-- Using an SVG icon for visual connection between blocks -->
+            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="#adb5bd" class="bi bi-link-45deg"
+                viewBox="0 0 16 16">
+                <path
+                    d="M4.715 6.542 3.343 7.914a3 3 0 1 0 4.243 4.243l1.828-1.829A3 3 0 0 0 8.586 5.5L8 6.086a1.002 1.002 0 0 0-.154.199 2 2 0 0 1 .861 3.337L6.88 11.45a2 2 0 1 1-2.83-2.83l.793-.792a4.018 4.018 0 0 1-.128-1.287z" />
+                <path
+                    d="M6.586 4.672A3 3 0 0 0 7.414 9.5l.775-.776a2 2 0 0 1-.896-3.346L9.12 3.55a2 2 0 1 1 2.83 2.83l-.793.792c.112.42.155.855.128 1.287l1.372-1.372a3 3 0 1 0-4.243-4.243L6.586 4.672z" />
+            </svg>
+        </div>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center mt-5 animate-fade-in-up">
+    <div class="col-md-6 col-lg-5">
+        <div class="card shadow-sm border-0 rounded-4">
+            <div class="card-header bg-white text-center py-4 rounded-top-4 border-bottom-0">
+                <div class="mb-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="var(--success-color)"
+                        class="bi bi-building-add" viewBox="0 0 16 16">
+                        <path
+                            d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Zm.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0Z" />
+                        <path
+                            d="M2 1a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v6.5a.5.5 0 0 1-1 0V1H3v14h3v-2.5a.5.5 0 0 1 .5-.5H8v4H3a1 1 0 0 1-1-1V1Z" />
+                        <path
+                            d="M4.5 2a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1Zm3 0a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1Zm3 0a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1Zm-6 3a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1Zm3 0a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1Zm3 0a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1Zm-6 3a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1Zm3 0a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1Z" />
+                    </svg>
+                </div>
+                <h3 class="fw-bold mb-0">Register Institution</h3>
+                <p class="text-muted mt-2 mb-0">Create an authorized issuer account</p>
+            </div>
+            <div class="card-body p-4 p-md-5">
+                <form method="POST" action="/register">
+                    <div class="mb-4">
+                        <label for="username" class="form-label fw-bold">Full Name / Organization Name</label>
+                        <input type="text" class="form-control form-control-lg rounded-3 bg-light border-0"
+                            id="username" name="username" placeholder="e.g., Raunak Gupta or BPIT" required>
+                        <div class="form-text mt-2 text-muted">This exact name will be cryptographically anchored to all
+                            documents you issue or receive.</div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-bold d-block">Account Role</label>
+                        <div class="btn-group w-100 shadow-sm" role="group" aria-label="Role selection">
+                            <input type="radio" class="btn-check" name="role" id="roleHolder" value="Holder"
+                                autocomplete="off" checked>
+                            <label class="btn btn-outline-success fw-bold p-3" for="roleHolder">
+                                <i class="bi bi-person-badge"></i> Document Holder<br>
+                                <small class="fw-normal">I want to receive & view certificates</small>
+                            </label>
+
+                            <input type="radio" class="btn-check" name="role" id="roleIssuer" value="Issuer"
+                                autocomplete="off">
+                            <label class="btn btn-outline-primary fw-bold p-3" for="roleIssuer">
+                                <i class="bi bi-building"></i> Verified Issuer<br>
+                                <small class="fw-normal">I want to issue official documents</small>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="password" class="form-label fw-bold">Password</label>
+                        <input type="password" class="form-control form-control-lg rounded-3 bg-light border-0"
+                            id="password" name="password" placeholder="Create a strong password" required>
+                    </div>
+                    <button type="submit"
+                        class="btn btn-success btn-lg w-100 rounded-pill fw-bold shadow-sm mt-3">Register
+                        Account</button>
+
+                    <div class="text-center mt-4">
+                        <span class="text-muted">Already registered?</span>
+                        <a href="/login" class="text-decoration-none fw-bold text-success ms-1">Sign In</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

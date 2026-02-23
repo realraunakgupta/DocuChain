@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="112" fill="#1e528a"/>
+  <!-- Document -->
+  <path d="M144,128 v230 h224 V224 L296,128 H144 Z" fill="none" stroke="#ffffff" stroke-width="32" stroke-linejoin="round"/>
+  <path d="M296,128 v96 h72" fill="none" stroke="#ffffff" stroke-width="32" stroke-linejoin="round"/>
+  <!-- Chain Links -->
+  <path d="M184,384 a48,48 0 0,1 0,-96 h48 a48,48 0 0,1 0,96 h-48 Z" fill="none" stroke="#ffffff" stroke-width="40" stroke-linecap="round"/>
+  <path d="M328,384 a48,48 0 0,0 0,-96 h-48 a48,48 0 0,0 0,96 h48 Z" fill="none" stroke="#ffffff" stroke-width="40" stroke-linecap="round"/>
+</svg>

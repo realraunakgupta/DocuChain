@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">Issue New Document</h4>
+            </div>
+            <div class="card-body">
+                <form action="/issue" method="POST" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="document" class="form-label">Upload Document (PDF/TXT)</label>
+                        <input class="form-control" type="file" id="document" name="document" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="document_type" class="form-label">Document Type</label>
+                        <select class="form-select" id="document_type" name="document_type" required>
+                            <option value="">Select a type...</option>
+                            <option value="Academic Certificate">Academic Certificate</option>
+                            <option value="Medical Certificate">Medical Certificate</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="student_name" class="form-label fw-bold">Student / Holder Name</label>
+                        <input type="text" class="form-control" id="student_name" name="student_name"
+                            placeholder="e.g. Jane Doe" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="holder_photo" class="form-label fw-bold">Holder Photograph <span
+                                class="badge bg-success ms-1">Immutable</span></label>
+                        <input class="form-control" type="file" id="holder_photo" name="holder_photo"
+                            accept="image/png, image/jpeg" required>
+                        <div class="form-text mt-1 text-muted"><i class="bi bi-shield-lock-fill"></i> Will be
+                            permanently bound to the {{ session['user'] }} blockchain signature.</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="validity" class="form-label fw-bold">Validity Period</label>
+                        <input type="text" list="validityOptions" class="form-control" id="validity" name="validity"
+                            placeholder="e.g. Lifetime, 1 Year, or custom date" required>
+                        <datalist id="validityOptions">
+                            <option value="Lifetime">
+                            <option value="1 Year">
+                            <option value="5 Years">
+                        </datalist>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Authorized Issuer</label>
+                        <input type="text" class="form-control bg-light" value="{{ session['user'] }}" disabled>
+                        <div class="form-text text-success">Logged in and anchored to your institution</div>
+                    </div>
+                    <button type="submit" class="btn btn-primary d-block w-100 mt-4 rounded-pill fw-bold">Issue Document
+                        to Blockchain</button>
+                </form>
+            </div>
+        </div>
+
+        {% if new_block %}
+        <div class="card mt-4 border-success shadow-sm">
+            <div class="card-header bg-success text-white">
+                <strong>Successfully Added to Block #{{ new_block.index }}</strong>
+            </div>
+            <div class="card-body">
+                <p><strong>Document Hash:</strong><br><span class="hash-text mt-1 d-inline-block">{{
+                        new_block.document_hash }}</span></p>
+                <p><strong>Block Hash:</strong><br><span class="hash-text mt-1 d-inline-block">{{ new_block.block_hash
+                        }}</span></p>
+                <p class="mb-0"><strong>Timestamp:</strong> {{ new_block.timestamp }}</p>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
