@@ -1,19 +1,20 @@
 /* Custom styles for DocuChain Offline Demo */
 :root {
-    --primary-color: #1a56db;
-    --primary-hover: #1e40af;
-    --success-color: #059669;
-    --bg-color: #f3f4f6;
+    --primary-color: #195de6;
+    --primary-hover: #154cbd;
+    --success-color: #34c759;
+    --bg-color: #fbfbfd;
     --card-bg: #ffffff;
-    --text-main: #111827;
-    --text-muted: #6b7280;
+    --text-main: #1d1d1f;
+    --text-muted: #86868b;
 }
 
 body {
     background-color: var(--bg-color);
-    font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     color: var(--text-main);
     overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
 }
 
 .hash-text {
@@ -61,8 +62,8 @@ body {
 }
 
 .feature-box {
-    padding: 2.5rem;
-    border-radius: 1rem;
+    padding: 3rem 2rem;
+    border-radius: 1.25rem;
     background: var(--card-bg);
     text-align: center;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
@@ -98,19 +99,25 @@ body {
 
 .card {
     border: none;
-    border-radius: 1rem;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    border-radius: 1.25rem;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.04);
+    padding: 1.5rem;
 }
 
 .card-header {
-    border-bottom: none;
-    border-radius: 1rem 1rem 0 0 !important;
+    background-color: transparent !important;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    padding-bottom: 1.5rem;
+    padding-top: 0.5rem;
+    border-radius: 1.25rem !important;
 }
 
 /* Navbar Enhancements */
 .navbar {
-    background: linear-gradient(90deg, #111827 0%, #1f2937 100%) !important;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    background: rgba(255, 255, 255, 0.8) !important;
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    border-bottom: 1px solid rgba(0,0,0,0.05);
 }
 
 /* Animations */
@@ -186,12 +193,10 @@ body {
 }
 
 .hero-title {
-    font-size: 4rem;
-    font-weight: 800;
-    background: linear-gradient(135deg, #1a56db 0%, #10b981 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
+    font-size: 5rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--text-main);
     margin-bottom: 1rem;
 }
 

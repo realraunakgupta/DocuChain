@@ -2,15 +2,14 @@
 {% block content %}
 <div class="row justify-content-center">
     <div class="col-md-8">
-        <div class="card shadow-sm">
-            <div class="card-header bg-primary text-white">
-                <h4 class="mb-0">Issue New Document</h4>
-            </div>
-            <div class="card-body">
+        <div class="card shadow-sm border-0 mb-5" style="border-radius: 1.5rem; overflow: hidden;">
+            <div class="card-body p-4 p-md-5">
+                <h2 class="fw-semibold mb-4 text-center">Issue New Document</h2>
                 <form action="/issue" method="POST" enctype="multipart/form-data">
-                    <div class="mb-3">
-                        <label for="document" class="form-label">Upload Document (PDF/TXT)</label>
-                        <input class="form-control" type="file" id="document" name="document" required>
+                    <div class="mb-4">
+                        <label for="document" class="form-label text-muted fw-medium">Upload Document (PDF/TXT)</label>
+                        <input class="form-control form-control-lg bg-light border-0" type="file" id="document"
+                            name="document" style="border-radius: 1rem;" required>
                     </div>
                     <div class="mb-3">
                         <label for="document_type" class="form-label">Document Type</label>
@@ -48,8 +47,10 @@
                         <input type="text" class="form-control bg-light" value="{{ session['user'] }}" disabled>
                         <div class="form-text text-success">Logged in and anchored to your institution</div>
                     </div>
-                    <button type="submit" class="btn btn-primary d-block w-100 mt-4 rounded-pill fw-bold">Issue Document
-                        to Blockchain</button>
+                    <div class="mb-4 mt-5">
+                        <button type="submit" class="btn btn-primary d-block w-100 py-3 rounded-pill fw-medium"
+                            style="background-color: var(--primary-color);">Issue Document to Blockchain</button>
+                    </div>
                 </form>
             </div>
         </div>

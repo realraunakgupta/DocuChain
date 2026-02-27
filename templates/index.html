@@ -1,25 +1,21 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="hero-wrapper text-center animate-fade-in-up">
-    <div class="container relative z-10">
-        <div class="mb-4 floating-element d-inline-block">
-            <svg width="80" height="80" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
-                <rect width="512" height="512" rx="112" fill="#1a56db" />
-                <path d="M144,128 v230 h224 V224 L296,128 H144 Z" fill="none" stroke="#ffffff" stroke-width="32"
-                    stroke-linejoin="round" />
-                <path d="M296,128 v96 h72" fill="none" stroke="#ffffff" stroke-width="32" stroke-linejoin="round" />
-                <path d="M184,384 a48,48 0 0,1 0,-96 h48 a48,48 0 0,1 0,96 h-48 Z" fill="none" stroke="#ffffff"
-                    stroke-width="40" stroke-linecap="round" />
-                <path d="M328,384 a48,48 0 0,0 0,-96 h-48 a48,48 0 0,0 0,96 h48 Z" fill="none" stroke="#ffffff"
-                    stroke-width="40" stroke-linecap="round" />
-            </svg>
-        </div>
+<div class="hero-wrapper text-center animate-fade-in-up pt-5 pb-5">
+    <div class="container relative z-10 pt-4">
         <h1 class="hero-title mb-3">DocuChain</h1>
-        <p class="lead text-muted mx-auto" style="max-width: 600px; font-size: 1.25rem;">
+        <p class="lead text-muted mx-auto mb-5"
+            style="max-width: 650px; font-size: 1.35rem; font-weight: 400; line-height: 1.6;">
             The next generation of secure, immutable, and decentralized credential verification. Ensure absolute
             document authenticity instantly.
         </p>
+        <div class="d-flex justify-content-center gap-3">
+            <a href="/issue" class="btn btn-primary rounded-pill px-5 py-3 fw-medium shadow-sm"
+                style="font-size: 1.1rem; background-color: var(--primary-color); border: none;">Issue New Document</a>
+            <a href="/verify" class="btn btn-light rounded-pill px-5 py-3 fw-medium shadow-sm"
+                style="font-size: 1.1rem; border: 1px solid rgba(0,0,0,0.05); color: var(--text-main);">Verify
+                Authenticity</a>
+        </div>
     </div>
 </div>
 
@@ -27,8 +23,8 @@
     <!-- Issue Feature -->
     <div class="col-md-4 animate-fade-in-up delay-1">
         <div class="feature-box">
-            <div class="mb-4 text-primary">
-                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor"
+            <div class="mb-4 text-primary opacity-75">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="var(--primary-color)"
                     class="bi bi-file-earmark-lock" viewBox="0 0 16 16">
                     <path
                         d="M10 7v1.076c.54.166 1 .597 1 1.224v2.4c0 .816-.781 1.3-1.5 1.3h-3c-.719 0-1.5-.484-1.5-1.3V9.3c0-.627.46-1.058 1-1.224V7a2 2 0 1 1 4 0zM7 7v1h2V7a1 1 0 0 0-2 0z" />
@@ -36,18 +32,20 @@
                         d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5v2z" />
                 </svg>
             </div>
-            <h3 class="fw-bold mb-3">Issue Certificates</h3>
-            <p class="text-muted mb-4">Digitally sign and anchor your official documents to the blockchain ledger
+            <h4 class="fw-semibold mb-3">Issue Certificates</h4>
+            <p class="text-muted mb-4" style="font-size: 0.95rem; line-height: 1.6;">Digitally sign and anchor your
+                official documents to the blockchain ledger
                 natively and offline.</p>
-            <a href="/issue" class="btn btn-outline-primary w-100 rounded-pill fw-bold">Issue New Document</a>
+            <a href="/issue" class="text-decoration-none fw-medium" style="color: var(--primary-color);">Issue New
+                Document <i class="bi bi-chevron-right ms-1" style="font-size: 0.8rem;"></i></a>
         </div>
     </div>
 
     <!-- Verify Feature -->
     <div class="col-md-4 animate-fade-in-up delay-2">
-        <div class="feature-box border-top border-4 border-success">
-            <div class="mb-4 text-success floating-element">
-                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor"
+        <div class="feature-box">
+            <div class="mb-4 opacity-75">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="var(--success-color)"
                     class="bi bi-shield-check" viewBox="0 0 16 16">
                     <path
                         d="M5.338 1.59a61.44 61.44 0 0 0-2.837.856.481.481 0 0 0-.328.39c-.554 4.157.726 7.19 2.253 9.188a10.725 10.725 0 0 0 2.287 2.233c.346.244.652.42.893.533.12.057.218.095.293.118a.55.55 0 0 0 .101.025.615.615 0 0 0 .1-.025c.076-.023.174-.061.294-.118.24-.113.547-.29.893-.533a10.726 10.726 0 0 0 2.287-2.233c1.527-1.997 2.807-5.031 2.253-9.188a.48.48 0 0 0-.328-.39c-.651-.213-1.75-.56-2.837-.855C9.552 1.29 8.531 1.067 8 1.067c-.53 0-1.552.223-2.662.524zM5.072.56C6.157.265 7.31 0 8 0s1.843.265 2.928.56c1.11.3 2.229.655 2.887.87a1.54 1.54 0 0 1 1.044 1.262c.596 4.477-.787 7.795-2.465 9.99a11.775 11.775 0 0 1-2.517 2.453 7.159 7.159 0 0 1-1.048.625c-.28.132-.581.24-.829.24s-.548-.108-.829-.24a7.158 7.158 0 0 1-1.048-.625 11.777 11.777 0 0 1-2.517-2.453C1.928 10.487.545 7.169 1.141 2.692A1.54 1.54 0 0 1 2.185 1.43 62.456 62.456 0 0 1 5.072.56z" />
@@ -55,27 +53,31 @@
                         d="M10.854 5.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 7.793l2.646-2.647a.5.5 0 0 1 .708 0z" />
                 </svg>
             </div>
-            <h3 class="fw-bold mb-3">Verify Documents</h3>
-            <p class="text-muted mb-4">Validate the integrity and authenticity of any document in seconds with
+            <h4 class="fw-semibold mb-3">Verify Documents</h4>
+            <p class="text-muted mb-4" style="font-size: 0.95rem; line-height: 1.6;">Validate the integrity and
+                authenticity of any document in seconds with
                 zero-knowledge cryptography.</p>
-            <a href="/verify" class="btn btn-success w-100 rounded-pill fw-bold shadow-sm">Verify Authenticity</a>
+            <a href="/verify" class="text-decoration-none fw-medium" style="color: var(--success-color);">Verify
+                Authenticity <i class="bi bi-chevron-right ms-1" style="font-size: 0.8rem;"></i></a>
         </div>
     </div>
 
     <!-- Explorer Feature -->
     <div class="col-md-4 animate-fade-in-up delay-3">
         <div class="feature-box">
-            <div class="mb-4 text-dark">
-                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor"
+            <div class="mb-4 text-dark opacity-75">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="var(--text-main)"
                     class="bi bi-diagram-3" viewBox="0 0 16 16">
                     <path fill-rule="evenodd"
                         d="M6 3.5A1.5 1.5 0 0 1 7.5 2h1A1.5 1.5 0 0 1 10 3.5v1A1.5 1.5 0 0 1 8.5 6v1H14a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-1 0V8h-5v.5a.5.5 0 0 1-1 0V8h-5v.5a.5.5 0 0 1-1 0v-1A.5.5 0 0 1 2 7h5.5V6A1.5 1.5 0 0 1 6 4.5v-1zM8.5 5a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1zM0 11.5A1.5 1.5 0 0 1 1.5 10h2A1.5 1.5 0 0 1 5 11.5v1A1.5 1.5 0 0 1 3.5 14h-2A1.5 1.5 0 0 1 0 12.5v-1zm1.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h2a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-2zm4.5.5A1.5 1.5 0 0 1 7.5 10h1a1.5 1.5 0 0 1 1.5 1.5v1A1.5 1.5 0 0 1 8.5 14h-1A1.5 1.5 0 0 1 6 12.5v-1zm1.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1zm4.5.5a1.5 1.5 0 0 1 1.5-1.5h2a1.5 1.5 0 0 1 1.5 1.5v1a1.5 1.5 0 0 1-1.5 1.5h-2a1.5 1.5 0 0 1-1.5-1.5v-1zm1.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h2a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-2z" />
                 </svg>
             </div>
-            <h3 class="fw-bold mb-3">Blockchain Explorer</h3>
-            <p class="text-muted mb-4">Monitor the immutable ledger in real-time. View every linked block and audit the
+            <h4 class="fw-semibold mb-3">Blockchain Explorer</h4>
+            <p class="text-muted mb-4" style="font-size: 0.95rem; line-height: 1.6;">Monitor the immutable ledger in
+                real-time. View every linked block and audit the
                 complete history.</p>
-            <a href="/chain" class="btn btn-outline-dark w-100 rounded-pill fw-bold">Explore Ledger</a>
+            <a href="/chain" class="text-decoration-none fw-medium" style="color: var(--text-main);">Explore Ledger <i
+                    class="bi bi-chevron-right ms-1" style="font-size: 0.8rem;"></i></a>
         </div>
     </div>
 </div>

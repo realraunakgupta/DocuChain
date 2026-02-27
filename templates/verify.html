@@ -2,18 +2,18 @@
 {% block content %}
 <div class="row justify-content-center">
     <div class="col-md-8">
-        <div class="card shadow-sm">
-            <div class="card-header bg-success text-white">
-                <h4 class="mb-0">Verify Document Authenticity</h4>
-            </div>
-            <div class="card-body">
+        <div class="card shadow-sm border-0 mb-5" style="border-radius: 1.5rem; overflow: hidden;">
+            <div class="card-body p-4 p-md-5">
+                <h2 class="fw-semibold mb-4 text-center">Verify Document Authenticity</h2>
                 <form action="/verify" method="POST" enctype="multipart/form-data">
-                    <div class="mb-3">
-                        <label for="document" class="form-label">Upload Document to Verify</label>
-                        <input class="form-control" type="file" id="document" name="document" required>
+                    <div class="mb-4">
+                        <label for="document" class="form-label text-muted fw-medium">Upload Document to Verify (PDF or
+                            Image)</label>
+                        <input class="form-control form-control-lg bg-light border-0" type="file" id="document"
+                            name="document" style="border-radius: 1rem;" required>
                     </div>
-                    <button type="submit" class="btn btn-success d-block w-100">Verify Integrity against
-                        Blockchain</button>
+                    <button type="submit" class="btn btn-primary d-block w-100 rounded-pill py-3 fw-medium"
+                        style="background-color: var(--primary-color);">Verify Integrity against Blockchain</button>
                 </form>
             </div>
         </div>

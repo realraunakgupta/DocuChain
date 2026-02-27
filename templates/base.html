@@ -13,24 +13,26 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top mb-5" style="padding: 12px 0;">
         <div class="container">
-            <a class="navbar-brand fw-bold" href="/">DocuChain</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+            <a class="navbar-brand fw-bold" style="font-size: 1.25rem; letter-spacing: -0.01em;" href="/">DocuChain</a>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center">
+                <ul class="navbar-nav mx-auto mb-2 mb-lg-0 align-items-center gap-3" style="font-size: 0.95rem;">
                     <li class="nav-item">
-                        <a class="nav-link" href="/issue">Issue Document</a>
+                        <a class="nav-link text-dark" href="/issue">Issue Document</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/verify">Verify Document</a>
+                        <a class="nav-link text-dark" href="/verify">Verify Document</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/chain">View Blockchain</a>
+                        <a class="nav-link text-dark" href="/chain">View Blockchain</a>
                     </li>
+                </ul>
+                <ul class="navbar-nav mb-2 mb-lg-0 align-items-center">
 
                     {% if session.get('user') %}
                     <li class="nav-item">
@@ -50,7 +52,7 @@
                                 <i class="bi bi-person-fill"></i>
                             </div>
                             {% endif %}
-                            <span class="fw-bold text-white">{{ session['user'] }}</span>
+                            <span class="fw-medium text-dark">{{ session['user'] }}</span>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2"
                             aria-labelledby="navbarDropdown">
@@ -67,7 +69,7 @@
                     </li>
                     {% else %}
                     <li class="nav-item ms-lg-3 mt-2 mt-lg-0">
-                        <a class="btn btn-outline-light btn-sm rounded-pill fw-bold" href="/login">Log in / Sign up</a>
+                        <a class="btn btn-dark btn-sm rounded-pill px-4 fw-medium" href="/login">Log in</a>
                     </li>
                     {% endif %}
                 </ul>
@@ -75,7 +77,7 @@
         </div>
     </nav>
 
-    <div class="container">
+    <div class="container" style="margin-top: 100px;">
         {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
         {% for category, message in messages %}
