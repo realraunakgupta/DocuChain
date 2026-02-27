@@ -1,0 +1,28 @@
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+*.swp
+
+# SQLite runtime files
+*.sqlite3
+*.db
+
+# Temporary generated data (if not tracking)
+# users.json
+# requests.json
+# blockchain.json
