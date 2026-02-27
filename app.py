@@ -346,6 +346,7 @@ def login():
         password = request.form.get('password')
         
         users = load_users()
+        # Ensure user exists and the password matches the stored hash
         if username in users and check_password_hash(users[username].get('password', ''), password):
             session['user'] = username
             session['role'] = users[username].get('role', 'Holder')
