@@ -54,15 +54,20 @@ DocuChain/
 ├── app.py                   # Main Flask application and URL routing
 ├── blockchain.py            # Core cryptographic blockchain ledger logic
 ├── requirements.txt         # Python package dependencies
-├── /templates               # HTML files 
+├── /templates               # HTML interfaces
 │   ├── base.html            # Global layout & glassmorphic Navbar
 │   ├── index.html           # Landing page
-│   ├── issue.html           # Administrator issuance dashboard
-│   └── verify.html          # Public verification portal
+│   ├── dashboard.html       # Combined dashboard for Issuers and Holders
+│   ├── issue.html           # Administrator document issuance
+│   ├── verify.html          # Public verification portal
+│   ├── chain.html           # Live mock blockchain explorer
+│   ├── login.html           # Secure user authentication
+│   └── register.html        # New user registration
 ├── /static                  # CSS and assets
-│   └── style.css            # Custom design tokens
-├── /demo_files              # Sample PDF diplomas and photos for testing
-└── *.json                   # Local data persistence (mock-database)
+│   ├── style.css            # Custom design tokens & dark mode
+│   └── /uploads             # Temporary and persistent file storage
+├── /demo_files              # Sample certificates & scripts for testing
+└── *.json                   # Local data persistence files (blockchain/users/requests)
 ```
 
 ## 🔐 Security Considerations
