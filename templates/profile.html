@@ -131,8 +131,11 @@
                     // Reset
                     scale = 1;
                     zoomSlider.value = 100;
-                    imgX = 0;
-                    imgY = 0;
+                    document.getElementById('zoom-label').textContent = '100%';
+                    // Center the image initially
+                    const containScale = Math.min(200 / naturalW, 200 / naturalH);
+                    imgX = (200 - naturalW * containScale) / 2;
+                    imgY = (200 - naturalH * containScale) / 2;
 
                     fitImage();
                     previewSection.style.display = 'block';
@@ -158,9 +161,9 @@
             const centerY = (containerSize - h) / 2;
 
             if (w <= containerSize && h <= containerSize) {
-                // Image fits inside — always center it
-                imgX = centerX;
-                imgY = centerY;
+                // Image fits inside — allow free movement but keep within circle
+                imgX = Math.max(0, Math.min(imgX, containerSize - w));
+                imgY = Math.max(0, Math.min(imgY, containerSize - h));
             } else {
                 // Zoomed past container — clamp so no empty edges
                 const maxX = 0;
