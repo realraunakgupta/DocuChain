@@ -1,9 +1,8 @@
 import hashlib
 import json
 import time
-import os
 
-BLOCKCHAIN_FILE = 'blockchain.json'
+from db import blockchain_collection
 
 class Block:
     def __init__(self, index, timestamp, document_type, issuer, document_hash, previous_hash, 
@@ -73,32 +72,21 @@ class Blockchain:
         self.load_chain()
 
     def load_chain(self):
-        if os.path.exists(BLOCKCHAIN_FILE):
-            try:
-                with open(BLOCKCHAIN_FILE, 'r') as f:
-                    data = json.load(f)
-                    if data:
-                        self.chain = [Block.from_dict(b) for b in data]
-                    else:
-                        # Empty array [] — recreate genesis block
-                        self.chain = []
-                        self.create_genesis_block()
-            except json.JSONDecodeError:
-                # If json is corrupted, print warning and recreate
-                print("Warning: blockchain.json corrupted. Creating a new genesis block.")
-                self.chain = []
-                self.create_genesis_block()
+        docs = list(blockchain_collection.find().sort([("index", 1)]))
+        if docs:
+            self.chain = [Block.from_dict(b) for b in docs]
         else:
+            self.chain = []
             self.create_genesis_block()
 
     def save_chain(self):
-        with open(BLOCKCHAIN_FILE, 'w') as f:
-            json.dump([b.to_dict() for b in self.chain], f, indent=4)
+        # We don't overwrite everything anymore. Instead, we insert blocks as we add them.
+        pass
 
     def create_genesis_block(self):
         genesis_block = Block(0, time.time(), "Genesis", "System", "0", "0")
         self.chain.append(genesis_block)
-        self.save_chain()
+        blockchain_collection.insert_one(genesis_block.to_dict())
 
     def get_latest_block(self):
         return self.chain[-1]
@@ -119,7 +107,7 @@ class Blockchain:
             student_image=student_image
         )
         self.chain.append(new_block)
-        self.save_chain()
+        blockchain_collection.insert_one(new_block.to_dict())
         return new_block
 
     def verify_chain(self):

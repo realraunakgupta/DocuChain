@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, flash, session, redirect, url_for
-import hashlib
 from blockchain import Blockchain
+import hashlib
 import os
 import json
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -8,42 +8,27 @@ import pyqrcode
 import io
 import base64
 
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
+
+from db import users_collection, requests_collection
+
+# Cloudinary automatically configures itself using the CLOUDINARY_URL from .env
 app = Flask(__name__)
 app.secret_key = 'docuchain_offline_demo_secret'  # Flash requires a secret key
 blockchain = Blockchain()
 
+from datetime import datetime
+@app.template_filter('formatdatetime')
+def format_datetime(value):
+    if value is None:
+        return ""
+    # Formats to: February 28, 2026 - 06:30 PM
+    return datetime.fromtimestamp(value).strftime('%B %d, %Y - %I:%M %p')
+
 # Ensure uploads directory exists on cloud environment
 os.makedirs(os.path.join(app.root_path, 'static', 'uploads'), exist_ok=True)
-
-USERS_FILE = 'users.json'
-
-def load_users():
-    if not os.path.exists(USERS_FILE):
-        return {}
-    try:
-        with open(USERS_FILE, 'r') as f:
-            return json.load(f)
-    except json.JSONDecodeError:
-        return {}
-
-def save_users(users):
-    with open(USERS_FILE, 'w') as f:
-        json.dump(users, f, indent=4)
-
-REQUESTS_FILE = 'requests.json'
-
-def load_requests():
-    if not os.path.exists(REQUESTS_FILE):
-        return {}
-    try:
-        with open(REQUESTS_FILE, 'r') as f:
-            return json.load(f)
-    except json.JSONDecodeError:
-        return {}
-
-def save_requests(requests_data):
-    with open(REQUESTS_FILE, 'w') as f:
-        json.dump(requests_data, f, indent=4)
 
 def calculate_file_hash(file_data):
     return hashlib.sha256(file_data).hexdigest()
@@ -51,8 +36,7 @@ def calculate_file_hash(file_data):
 @app.context_processor
 def inject_user_data():
     if 'user' in session:
-        users = load_users()
-        user_data = users.get(session['user'], {})
+        user_data = users_collection.find_one({"_id": session['user']}) or {}
         return dict(current_user=user_data)
     return dict(current_user=None)
 
@@ -93,36 +77,44 @@ def issue():
         file_data = file.read()
         doc_hash = calculate_file_hash(file_data)
         
-        # Save the original issued document to uploads
-        _, ext = os.path.splitext(file.filename)
-        if not ext:
-            ext = '.pdf'
-        doc_filename = f"doc_{doc_hash}{ext}"
-        doc_path = os.path.join(app.root_path, 'static', 'uploads', doc_filename)
-        os.makedirs(os.path.dirname(doc_path), exist_ok=True)
-        with open(doc_path, 'wb') as f:
-            f.write(file_data)
+        # Rewind file pointer for Cloudinary upload
+        file.seek(0)
+        
+        # Upload the original issued document to Cloudinary
+        upload_result = cloudinary.uploader.upload(
+            file, 
+            resource_type='auto',
+            public_id=f"doc_{doc_hash}",
+            folder="docuchain/documents"
+        )
+        doc_url = upload_result.get('secure_url')
         
         # 2. Process and Hash Photo (Immutable Photo Upload)
         photo_data = photo.read()
         photo_hash = calculate_file_hash(photo_data)
         
+        photo.seek(0)
         # Save photo purely by its cryptographic identity
-        photo_ext = '.jpg' if 'jpeg' in photo.content_type or 'jpg' in photo.filename.lower() else '.png'
-        photo_filename = f"{photo_hash}{photo_ext}"
-        photo_path = os.path.join(app.root_path, 'static', 'uploads', photo_filename)
-        with open(photo_path, 'wb') as f:
-            f.write(photo_data)
+        photo_upload_result = cloudinary.uploader.upload(
+            photo,
+            folder="docuchain/photos",
+            public_id=f"{photo_hash}"
+        )
+        photo_url = photo_upload_result.get('secure_url')
             
         # 3. Auto-generate unique Cert ID
         cert_id = hashlib.md5((student_name + str(doc_hash)).encode()).hexdigest()[:8].upper()
         
         # Ensure fresh load from file before adding
         blockchain.load_chain()
-        new_block = blockchain.add_block(doc_type, issuer, doc_hash, student_name, cert_id, validity, student_image=photo_filename)
+        # Note: We now store the photo URL instead of just the filename
+        new_block = blockchain.add_block(doc_type, issuer, doc_hash, student_name, cert_id, validity, student_image=photo_url)
+        
+        # Format the timestamp directly for the frontend
+        formatted_timestamp = datetime.fromtimestamp(new_block.timestamp).strftime('%B %d, %Y - %I:%M %p')
         
         flash("Document successfully issued and added to the blockchain.", "success")
-        return render_template('issue.html', new_block=new_block.to_dict())
+        return render_template('issue.html', new_block=new_block.to_dict(), formatted_timestamp=formatted_timestamp)
         
     return render_template('issue.html')
 
@@ -132,8 +124,7 @@ def request_verification():
         flash("You must be logged in as a Holder to request verification.", "warning")
         return redirect(url_for('login'))
         
-    users = load_users()
-    issuers = [u for u, data in users.items() if data.get('role') == 'Issuer']
+    issuers = [{"username": u["_id"], "data": u} for u in users_collection.find({"role": "Issuer"})]
         
     if request.method == 'POST':
         if 'document' not in request.files:
@@ -161,30 +152,29 @@ def request_verification():
             flash("This exact document has already been authenticated on the blockchain.", "warning")
             return redirect(request.url)
         
-        # Save file to uploads folder using standard hash prefix
-        _, ext = os.path.splitext(file.filename)
-        if not ext:
-            ext = '.pdf'
-        safe_filename = f"doc_{doc_hash}{ext}"
-        filepath = os.path.join(app.root_path, 'static', 'uploads', safe_filename)
-        
-        with open(filepath, 'wb') as f:
-            f.write(file_data)
+        # Upload file to Cloudinary
+        file.seek(0)
+        upload_result = cloudinary.uploader.upload(
+            file,
+            resource_type='auto',
+            public_id=f"req_{doc_hash[:16]}",
+            folder="docuchain/requests"
+        )
+        file_url = upload_result.get('secure_url')
             
-        requests_data = load_requests()
         req_id = f"REQ-{doc_hash[:8].upper()}"
         
         import time
-        requests_data[req_id] = {
+        requests_collection.insert_one({
+            "_id": req_id,
             "holder": session.get('user'),
             "target_issuer": target_issuer,
             "document_type": doc_type,
-            "file_path": safe_filename,
+            "file_path": file_url,  # Now storing Cloudinary URL
             "status": "Pending",
             "timestamp": time.time()
-        }
+        })
         
-        save_requests(requests_data)
         flash("Verification request submitted successfully. Waiting for ISSUER approval.", "success")
         return redirect(url_for('dashboard'))
         
@@ -196,24 +186,24 @@ def approve_request(req_id):
         flash("Unauthorized.", "danger")
         return redirect(url_for('login'))
         
-    requests_data = load_requests()
-    if req_id not in requests_data:
+    req = requests_collection.find_one({"_id": req_id})
+    if not req:
         flash("Request not found.", "danger")
         return redirect(url_for('dashboard'))
         
-    req = requests_data[req_id]
     if req.get('target_issuer') != session.get('user'):
         flash("You are not authorized to approve this request.", "danger")
         return redirect(url_for('dashboard'))
         
-    # Read the file and hash it
-    filepath = os.path.join(app.root_path, 'static', 'uploads', req['file_path'])
-    if not os.path.exists(filepath):
-        flash("Document file missing from server.", "danger")
+    # Read the file and hash it from Cloudinary instead of local disk
+    file_url = req['file_path']
+    try:
+        import urllib.request
+        with urllib.request.urlopen(file_url) as response:
+            file_data = response.read()
+    except Exception as e:
+        flash("Document file missing from cloud storage.", "danger")
         return redirect(url_for('dashboard'))
-        
-    with open(filepath, 'rb') as f:
-        file_data = f.read()
         
     doc_hash = calculate_file_hash(file_data)
         
@@ -224,15 +214,13 @@ def approve_request(req_id):
     existing = blockchain.find_document_hash(doc_hash)
     if existing:
         flash("This document is already verified on the blockchain.", "warning")
-        req['status'] = 'Approved'
-        save_requests(requests_data)
+        requests_collection.update_one({"_id": req_id}, {"$set": {"status": "Approved"}})
         return redirect(url_for('dashboard'))
     
     import time
     cert_id = f"VERIFIED-{int(time.time())}"
     
-    users = load_users()
-    holder_data = users.get(req['holder'], {})
+    holder_data = users_collection.find_one({"_id": req['holder']}) or {}
     student_image = holder_data.get('avatar', 'placeholder_avatar.svg')
     
     blockchain.add_block(
@@ -245,8 +233,7 @@ def approve_request(req_id):
         student_image=student_image
     )
     
-    req['status'] = 'Approved'
-    save_requests(requests_data)
+    requests_collection.update_one({"_id": req_id}, {"$set": {"status": "Approved"}})
     
     flash(f"Successfully verified and anchored {req['holder']}'s document to the blockchain.", "success")
     return redirect(url_for('dashboard'))
@@ -257,18 +244,16 @@ def reject_request(req_id):
         flash("Unauthorized.", "danger")
         return redirect(url_for('login'))
         
-    requests_data = load_requests()
-    if req_id not in requests_data:
+    req = requests_collection.find_one({"_id": req_id})
+    if not req:
         flash("Request not found.", "danger")
         return redirect(url_for('dashboard'))
         
-    req = requests_data[req_id]
     if req.get('target_issuer') != session.get('user'):
         flash("You are not authorized to reject this request.", "danger")
         return redirect(url_for('dashboard'))
         
-    req['status'] = 'Rejected'
-    save_requests(requests_data)
+    requests_collection.update_one({"_id": req_id}, {"$set": {"status": "Rejected"}})
     
     flash("Verification request rejected.", "info")
     return redirect(url_for('dashboard'))
@@ -366,11 +351,11 @@ def login():
         username = request.form.get('username')
         password = request.form.get('password')
         
-        users = load_users()
+        user = users_collection.find_one({"_id": username})
         # Ensure user exists and the password matches the stored hash
-        if username in users and check_password_hash(users[username].get('password', ''), password):
+        if user and check_password_hash(user.get('password', ''), password):
             session['user'] = username
-            session['role'] = users[username].get('role', 'Holder')
+            session['role'] = user.get('role', 'Holder')
             flash(f"Welcome back, {username}!", 'success')
             return redirect(url_for('dashboard'))
         else:
@@ -393,16 +378,15 @@ def register():
             flash("Username and password are required.", "warning")
             return redirect(url_for('register'))
             
-        users = load_users()
-        if username in users:
+        if users_collection.find_one({"_id": username}):
             flash("Username already registered.", "danger")
             return redirect(url_for('register'))
             
-        users[username] = {
+        users_collection.insert_one({
+            '_id': username,
             'password': generate_password_hash(password),
             'role': role
-        }
-        save_users(users)
+        })
         
         flash("Registration successful! You can now log in.", "success")
         return redirect(url_for('login'))
@@ -415,9 +399,8 @@ def profile():
         flash("You must be logged in to view this page.", "warning")
         return redirect(url_for('login'))
         
-    users = load_users()
     current_username = session['user']
-    user_data = users.get(current_username, {})
+    user_data = users_collection.find_one({"_id": current_username}) or {}
     
     if request.method == 'POST':
         if 'avatar' not in request.files:
@@ -441,19 +424,18 @@ def profile():
         file_data = file.read()
         photo_hash = calculate_file_hash(file_data)
         
-        _, ext = os.path.splitext(file.filename)
-        if not ext:
-            ext = '.jpg'
-        safe_filename = f"{photo_hash}{ext}"
-        filepath = os.path.join(app.root_path, 'static', 'uploads', safe_filename)
-        
-        with open(filepath, 'wb') as f:
-            f.write(file_data)
+        # Upload to Cloudinary
+        file.seek(0)
+        upload_result = cloudinary.uploader.upload(
+            file,
+            folder="docuchain/photos",
+            public_id=f"{photo_hash}"
+        )
+        photo_url = upload_result.get('secure_url')
             
-        user_data['avatar'] = safe_filename
+        user_data['avatar'] = photo_url
         user_data['last_photo_update'] = time.time()
-        users[current_username] = user_data
-        save_users(users)
+        users_collection.update_one({"_id": current_username}, {"$set": user_data})
         
         flash("Immutable Profile Photo updated successfully! Future verifications will anchor this photo.", "success")
         return redirect(url_for('profile'))
@@ -471,7 +453,6 @@ def dashboard():
     # Reload blockchain to be safe
     blockchain.load_chain()
     
-    requests_data = load_requests()
     my_requests = []
     
     my_documents = []
@@ -482,10 +463,9 @@ def dashboard():
                 my_documents.append(block)
                 
         # Find all verification requests made by this holder
-        for req_id, req in requests_data.items():
-            if req.get('holder') == username and req.get('status') != 'Approved':
-                req['id'] = req_id
-                my_requests.append(req)
+        my_requests = list(requests_collection.find({"holder": username, "status": {"$ne": "Approved"}}))
+        for r in my_requests:
+            r['id'] = r['_id']
                 
     elif role == 'Issuer':
         # Find all documents issued BY this organization
@@ -494,10 +474,9 @@ def dashboard():
                 my_documents.append(block)
                 
         # Find all pending verification requests targeted at this issuer
-        for req_id, req in requests_data.items():
-            if req.get('target_issuer') == username and req.get('status') == 'Pending':
-                req['id'] = req_id
-                my_requests.append(req)
+        my_requests = list(requests_collection.find({"target_issuer": username, "status": "Pending"}))
+        for r in my_requests:
+            r['id'] = r['_id']
                 
     return render_template('dashboard.html', role=role, username=username, my_documents=my_documents, my_requests=my_requests)
 
@@ -539,17 +518,28 @@ def download_file(doc_hash):
     if 'user' not in session:
         return redirect(url_for('login'))
         
-    uploads_dir = os.path.join(app.root_path, 'static', 'uploads')
-    if not os.path.exists(uploads_dir):
-        flash("Server storage unavailable.", "danger")
-        return redirect(url_for('dashboard'))
-        
-    for filename in os.listdir(uploads_dir):
-        if filename.startswith(f"doc_{doc_hash}") or filename.startswith(f"req_{doc_hash[:16]}"):
-            from flask import send_from_directory
-            return send_from_directory(uploads_dir, filename, as_attachment=True)
+    # Query Cloudinary to find the file by its tag/hash
+    try:
+        # Search for document by public ID
+        resource = cloudinary.api.resource(f"docuchain/documents/doc_{doc_hash}")
+        url = resource.get('secure_url')
+        if url:
+            # We redirect them to the cloudinary URL but prompt a download
+            # Cloudinary provides an attachment flag: 'fl_attachment'
+            download_url = url.replace('/upload/', '/upload/fl_attachment/')
+            return redirect(download_url)
+    except cloudinary.exceptions.NotFound:
+        # Check if it was a verification request draft
+        try:
+            resource = cloudinary.api.resource(f"docuchain/requests/req_{doc_hash[:16]}")
+            url = resource.get('secure_url')
+            if url:
+                download_url = url.replace('/upload/', '/upload/fl_attachment/')
+                return redirect(download_url)
+        except cloudinary.exceptions.NotFound:
+            pass
             
-    flash("Original document file not found on the server.", "warning")
+    flash("Original document file not found on the cloud server.", "warning")
     return redirect(url_for('dashboard'))
 
 @app.route('/view_file/<doc_hash>')
@@ -557,17 +547,22 @@ def view_file_route(doc_hash):
     if 'user' not in session:
         return redirect(url_for('login'))
         
-    uploads_dir = os.path.join(app.root_path, 'static', 'uploads')
-    if not os.path.exists(uploads_dir):
-        flash("Server storage unavailable.", "danger")
-        return redirect(url_for('dashboard'))
-        
-    for filename in os.listdir(uploads_dir):
-        if filename.startswith(f"doc_{doc_hash}") or filename.startswith(f"req_{doc_hash[:16]}"):
-            from flask import send_from_directory
-            return send_from_directory(uploads_dir, filename)
+    # Redirect to the direct Cloudinary URL
+    try:
+        resource = cloudinary.api.resource(f"docuchain/documents/doc_{doc_hash}")
+        url = resource.get('secure_url')
+        if url:
+            return redirect(url)
+    except cloudinary.exceptions.NotFound:
+        try:
+            resource = cloudinary.api.resource(f"docuchain/requests/req_{doc_hash[:16]}")
+            url = resource.get('secure_url')
+            if url:
+                return redirect(url)
+        except cloudinary.exceptions.NotFound:
+            pass
             
-    flash("Original document file not found on the server.", "warning")
+    flash("Original document file not found on the cloud server.", "warning")
     return redirect(url_for('dashboard'))
 
 @app.route('/privacy')

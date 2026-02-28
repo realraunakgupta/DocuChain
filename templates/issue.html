@@ -89,7 +89,7 @@
                         new_block.document_hash }}</span></p>
                 <p><strong>Block Hash:</strong><br><span class="hash-text mt-1 d-inline-block">{{ new_block.block_hash
                         }}</span></p>
-                <p class="mb-0"><strong>Timestamp:</strong> {{ new_block.timestamp }}</p>
+                <p class="mb-0"><strong>Timestamp:</strong> {{ new_block.timestamp | formatdatetime }}</p>
             </div>
         </div>
         {% endif %}
