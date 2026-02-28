@@ -77,7 +77,12 @@ class Blockchain:
             try:
                 with open(BLOCKCHAIN_FILE, 'r') as f:
                     data = json.load(f)
-                    self.chain = [Block.from_dict(b) for b in data]
+                    if data:
+                        self.chain = [Block.from_dict(b) for b in data]
+                    else:
+                        # Empty array [] — recreate genesis block
+                        self.chain = []
+                        self.create_genesis_block()
             except json.JSONDecodeError:
                 # If json is corrupted, print warning and recreate
                 print("Warning: blockchain.json corrupted. Creating a new genesis block.")
