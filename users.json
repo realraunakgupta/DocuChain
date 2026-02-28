@@ -10,5 +10,17 @@
         "role": "Issuer",
         "avatar": "5d4b851d6c9e688532b19477ac24f507826054268d65a583bb9ddfa9eb9ed9b8.png",
         "last_photo_update": 1771876292.8442013
+    },
+    "TestIssuer": {
+        "password": "scrypt:32768:8:1$R1IwdEumOyWekG9Y$8c8408182660c15797c3d47ab19c11e6004da4d3939b89b39ba2ab3e350d2139282ba4dca772d8d4d3169096f58c366dda49011c710e4cfb360f002aa7f1e655",
+        "role": "Holder"
+    },
+    "a": {
+        "password": "scrypt:32768:8:1$HabEitJSGkXCzczd$d1d0e092e6a05f975dac75f1ff0711c16cee5653808dbd394f6cec467a251e3083f8f4f986f67534fe15b8fc4b3a44eca38d5a4bdf0b2a1e1d4ae426085122f9",
+        "role": "Issuer"
+    },
+    "b": {
+        "password": "scrypt:32768:8:1$0v40LRQfn15kXiTZ$4a564473dbdf38d53eb5571c258b48076895eb1235b2ad70226e01f80559ee906700887b4abe3dfb9a2852a532cbebb83dc3bef559d6510cae2c4936b35ad425",
+        "role": "Holder"
     }
 }

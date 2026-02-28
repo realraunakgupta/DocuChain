@@ -142,13 +142,6 @@ def request_verification():
         file_data = file.read()
         doc_hash = calculate_file_hash(file_data)
         
-        # Check if document already exists on the blockchain
-        blockchain.load_chain()
-        existing = blockchain.find_document_hash(doc_hash)
-        if existing:
-            flash("This document is already verified on the blockchain. You cannot request verification for it again.", "warning")
-            return redirect(url_for('dashboard'))
-        
         # Save file to uploads folder using hash
         _, ext = os.path.splitext(file.filename)
         if not ext:
