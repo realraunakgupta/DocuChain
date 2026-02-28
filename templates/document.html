@@ -52,7 +52,7 @@
                         <div class="mb-4">
                             {% if matching_block.student_image %}
                             <!-- Actual Immutable Photo from Blockchain -->
-                            <img src="{{ url_for('static', filename='uploads/' + matching_block.student_image) }}"
+                            <img src="{{ matching_block.student_image if matching_block.student_image.startswith('http') else url_for('static', filename='uploads/' + matching_block.student_image) }}"
                                 alt="Holder Photo" class="img-thumbnail rounded-circle shadow-sm"
                                 style="width: 140px; height: 140px; object-fit: contain; background-color: #f0f0f0; border: 4px solid white;">
                             {% else %}

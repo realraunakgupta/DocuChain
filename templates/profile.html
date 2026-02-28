@@ -8,8 +8,8 @@
 
                 <div class="mb-4">
                     {% if user_data and user_data.get('avatar') %}
-                    <img src="/static/uploads/{{ user_data.get('avatar') }}" alt="Current Profile"
-                        class="rounded-circle border border-3 border-primary shadow-sm"
+                    <img src="{{ user_data.get('avatar') if user_data.get('avatar', '').startswith('http') else '/static/uploads/' + user_data.get('avatar', '') }}"
+                        alt="Current Profile" class="rounded-circle border border-3 border-primary shadow-sm"
                         style="width: 150px; height: 150px; object-fit: contain; background-color: #f0f0f0;">
                     <p class="text-secondary mt-3 small"><i class="bi bi-check-circle-fill text-success"></i> This
                         verified photo will be permanently cryptographically signed to all future documents.</p>
