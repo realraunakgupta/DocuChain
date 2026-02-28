@@ -54,7 +54,7 @@
                         <select class="form-select" id="target_issuer" name="target_issuer" required>
                             <option value="" disabled selected>Select an Authorized Institution...</option>
                             {% for issuer in issuers %}
-                            <option value="{{ issuer }}">{{ issuer }}</option>
+                            <option value="{{ issuer.username }}">{{ issuer.username }}</option>
                             {% endfor %}
                         </select>
                         <div class="form-text">This institution will receive your document and decide whether to
