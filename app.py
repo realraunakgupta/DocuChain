@@ -3,6 +3,9 @@ from blockchain import Blockchain
 import hashlib
 import os
 import json
+import time
+import urllib.request
+from datetime import datetime, timezone, timedelta
 from werkzeug.security import generate_password_hash, check_password_hash
 import pyqrcode
 import io
@@ -16,10 +19,9 @@ from db import users_collection, requests_collection
 
 # Cloudinary automatically configures itself using the CLOUDINARY_URL from .env
 app = Flask(__name__)
-app.secret_key = 'docuchain_offline_demo_secret'  # Flash requires a secret key
+app.secret_key = os.environ.get('SECRET_KEY', 'docuchain_offline_demo_secret')
 blockchain = Blockchain()
 
-from datetime import datetime
 @app.template_filter('formatdatetime')
 def format_datetime(value):
     if value is None:
@@ -164,7 +166,7 @@ def request_verification():
             
         req_id = f"REQ-{doc_hash[:8].upper()}"
         
-        import time
+
         requests_collection.insert_one({
             "_id": req_id,
             "holder": session.get('user'),
@@ -198,7 +200,6 @@ def approve_request(req_id):
     # Read the file and hash it from Cloudinary instead of local disk
     file_url = req['file_path']
     try:
-        import urllib.request
         with urllib.request.urlopen(file_url) as response:
             file_data = response.read()
     except Exception as e:
@@ -217,7 +218,7 @@ def approve_request(req_id):
         requests_collection.update_one({"_id": req_id}, {"$set": {"status": "Approved"}})
         return redirect(url_for('dashboard'))
     
-    import time
+
     cert_id = f"VERIFIED-{int(time.time())}"
     
     holder_data = users_collection.find_one({"_id": req['holder']}) or {}
@@ -280,7 +281,6 @@ def verify():
         qr_base64 = None
         formatted_date = None
         if matching_block:
-            from datetime import datetime, timezone, timedelta
             ist = timezone(timedelta(hours=5, minutes=30))
             formatted_date = datetime.fromtimestamp(matching_block.timestamp, ist).strftime('%B %d, %Y')
             
@@ -312,7 +312,6 @@ def chain():
     is_valid = blockchain.verify_chain()
     
     chain_data = []
-    from datetime import datetime, timezone, timedelta
     ist = timezone(timedelta(hours=5, minutes=30))
     is_logged_in = 'user' in session
     
@@ -412,7 +411,7 @@ def profile():
             flash("No file selected.", "danger")
             return redirect(url_for('profile'))
             
-        import time
+
         # Check cooldown (60 days)
         last_update = user_data.get('last_photo_update', 0)
         cooldown = 60 * 24 * 3600
@@ -492,7 +491,6 @@ def view_document(doc_hash):
         return redirect(url_for('index'))
         
     # Format the timestamp for nice UI display
-    from datetime import datetime, timezone, timedelta
     ist = timezone(timedelta(hours=5, minutes=30))
     formatted_date = datetime.fromtimestamp(matching_block.timestamp, ist).strftime('%B %d, %Y')
 
