@@ -16,15 +16,16 @@
                             d="M4.5 2a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1Zm3 0a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1Zm3 0a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1Zm-6 3a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1Zm3 0a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1Zm3 0a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1Zm-6 3a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1Zm3 0a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1Z" />
                     </svg>
                 </div>
-                <h3 class="fw-bold mb-0">Register Institution</h3>
-                <p class="text-muted mt-2 mb-0">Create an authorized issuer account</p>
+                <h3 class="fw-bold mb-0">Register New User</h3>
+                <p class="text-muted mt-2 mb-0">Create an authorized issuer or holder account</p>
             </div>
             <div class="card-body p-4 p-md-5">
                 <form method="POST" action="/register">
                     <div class="mb-4">
                         <label for="username" class="form-label fw-bold">Full Name / Organization Name</label>
                         <input type="text" class="form-control form-control-lg rounded-3 bg-light border-0"
-                            id="username" name="username" placeholder="e.g., Raunak Gupta or BPIT" required>
+                            id="username" name="username" placeholder="Enter your full name or organization name"
+                            required>
                         <div class="form-text mt-2 text-muted">This exact name will be cryptographically anchored to all
                             documents you issue or receive.</div>
                     </div>

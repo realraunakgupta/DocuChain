@@ -1,18 +1,1 @@
-{
-    "REQ-ED854117": {
-        "holder": "Raunak Gupta",
-        "target_issuer": "Bhagwan Parshuram Institute of Technology",
-        "document_type": "Session Attended Certificate",
-        "file_path": "req_ed8541175bddc94c.pdf",
-        "status": "Approved",
-        "timestamp": 1771874802.4924002
-    },
-    "REQ-D0EF1749": {
-        "holder": "Raunak Gupta",
-        "target_issuer": "Bhagwan Parshuram Institute of Technology",
-        "document_type": "Participation Certificate",
-        "file_path": "req_d0ef1749bbbfd961.pdf",
-        "status": "Approved",
-        "timestamp": 1771875062.296185
-    }
-}
+{}

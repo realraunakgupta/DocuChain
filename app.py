@@ -90,6 +90,15 @@ def issue():
         file_data = file.read()
         doc_hash = calculate_file_hash(file_data)
         
+        # Save the original issued document to uploads
+        _, ext = os.path.splitext(file.filename)
+        if not ext:
+            ext = '.pdf'
+        doc_filename = f"doc_{doc_hash}{ext}"
+        doc_path = os.path.join(app.root_path, 'static', 'uploads', doc_filename)
+        with open(doc_path, 'wb') as f:
+            f.write(file_data)
+        
         # 2. Process and Hash Photo (Immutable Photo Upload)
         photo_data = photo.read()
         photo_hash = calculate_file_hash(photo_data)
@@ -142,11 +151,17 @@ def request_verification():
         file_data = file.read()
         doc_hash = calculate_file_hash(file_data)
         
-        # Save file to uploads folder using hash
+        # Duplicate check: prevent requesting verification if already anchored
+        blockchain.load_chain()
+        if blockchain.find_document_hash(doc_hash):
+            flash("This exact document has already been authenticated on the blockchain.", "warning")
+            return redirect(request.url)
+        
+        # Save file to uploads folder using standard hash prefix
         _, ext = os.path.splitext(file.filename)
         if not ext:
             ext = '.pdf'
-        safe_filename = f"req_{doc_hash[:16]}{ext}"
+        safe_filename = f"doc_{doc_hash}{ext}"
         filepath = os.path.join('static', 'uploads', safe_filename)
         
         with open(filepath, 'wb') as f:
@@ -511,6 +526,50 @@ def view_document(doc_hash):
     qr_base64 = base64.b64encode(buffer.getvalue()).decode('utf-8')
     
     return render_template('document.html', matching_block=matching_block, qr_base64=qr_base64, issued_date=formatted_date)
+
+@app.route('/download_file/<doc_hash>')
+def download_file(doc_hash):
+    if 'user' not in session:
+        return redirect(url_for('login'))
+        
+    uploads_dir = os.path.join(app.root_path, 'static', 'uploads')
+    if not os.path.exists(uploads_dir):
+        flash("Server storage unavailable.", "danger")
+        return redirect(url_for('dashboard'))
+        
+    for filename in os.listdir(uploads_dir):
+        if filename.startswith(f"doc_{doc_hash}") or filename.startswith(f"req_{doc_hash[:16]}"):
+            from flask import send_from_directory
+            return send_from_directory(uploads_dir, filename, as_attachment=True)
+            
+    flash("Original document file not found on the server.", "warning")
+    return redirect(url_for('dashboard'))
+
+@app.route('/view_file/<doc_hash>')
+def view_file_route(doc_hash):
+    if 'user' not in session:
+        return redirect(url_for('login'))
+        
+    uploads_dir = os.path.join(app.root_path, 'static', 'uploads')
+    if not os.path.exists(uploads_dir):
+        flash("Server storage unavailable.", "danger")
+        return redirect(url_for('dashboard'))
+        
+    for filename in os.listdir(uploads_dir):
+        if filename.startswith(f"doc_{doc_hash}") or filename.startswith(f"req_{doc_hash[:16]}"):
+            from flask import send_from_directory
+            return send_from_directory(uploads_dir, filename)
+            
+    flash("Original document file not found on the server.", "warning")
+    return redirect(url_for('dashboard'))
+
+@app.route('/privacy')
+def privacy():
+    return render_template('privacy.html')
+
+@app.route('/terms')
+def terms():
+    return render_template('terms.html')
 
 @app.route('/logout')
 def logout():

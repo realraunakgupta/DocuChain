@@ -89,8 +89,14 @@
                     <p class="small text-muted mb-3"><i class="bi bi-file-earmark-text me-1"></i> Pending review for
                         official issuance.</p>
                     <div class="d-flex gap-2">
-                        <a href="/static/uploads/{{ req.file_path }}" target="_blank"
-                            class="btn btn-sm btn-outline-secondary w-100">View Doc</a>
+                        <div class="d-flex gap-1 w-100">
+                            <a href="/static/uploads/{{ req.file_path }}" target="_blank"
+                                class="btn btn-sm btn-outline-secondary w-100" title="View"><i
+                                    class="bi bi-eye"></i></a>
+                            <a href="/static/uploads/{{ req.file_path }}" download
+                                class="btn btn-sm btn-outline-secondary w-100" title="Download"><i
+                                    class="bi bi-download"></i></a>
+                        </div>
                         <form action="/approve_request/{{ req.id }}" method="POST" class="w-100"><button type="submit"
                                 class="btn btn-sm btn-success w-100">Approve</button></form>
                         <form action="/reject_request/{{ req.id }}" method="POST" class="w-100"><button type="submit"
@@ -119,9 +125,11 @@
                     </div>
                     <h5 class="fw-bold mt-2 mb-1">Target: {{ req.target_issuer }}</h5>
                 </div>
-                <div class="card-body py-3">
+                <div class="card-body py-3 d-flex justify-content-between align-items-center">
                     <a href="/static/uploads/{{ req.file_path }}" target="_blank" class="small text-decoration-none"><i
-                            class="bi bi-paperclip me-1"></i> View Submitted Document</a>
+                            class="bi bi-eye me-1"></i> View Doc</a>
+                    <a href="/static/uploads/{{ req.file_path }}" download
+                        class="small text-decoration-none text-success"><i class="bi bi-download me-1"></i> Download</a>
                 </div>
             </div>
         </div>
@@ -145,7 +153,7 @@
     <div class="row g-4">
         {% for doc in my_documents|reverse %}
         <div class="col-md-6 col-lg-4">
-            <a href="/document/{{ doc.document_hash }}" class="interactive-card h-100">
+            <div class="interactive-card h-100">
                 <div class="card h-100 shadow-sm border-0 rounded-4">
                     <div class="card-header bg-white border-bottom-0 pt-4 pb-0">
                         <div class="d-flex justify-content-between align-items-start">
@@ -160,17 +168,24 @@
                         <p class="text-muted small mb-0">ID: <span class="font-monospace">{{ doc.cert_id }}</span></p>
                     </div>
                     <div class="card-body mt-2">
-                        <div class="bg-light p-3 rounded-3 text-center">
+                        <div class="bg-light p-3 rounded-3 text-center mb-3">
                             <p class="mb-1 text-uppercase small fw-bold text-muted">Digital Signature</p>
-                            <p class="font-monospace mb-2 text-success small text-truncate"
+                            <p class="font-monospace mb-0 text-success small text-truncate"
                                 title="{{ doc.document_hash }}">
                                 {{ doc.document_hash[:20] }}...{{ doc.document_hash[-10:] }}</p>
-                            <a href="/document/{{ doc.document_hash }}"
-                                class="btn btn-sm btn-outline-primary rounded-pill w-100 mt-2">View on Blockchain</a>
                         </div>
+                        <div class="d-flex gap-2 mt-auto">
+                            <a href="/view_file/{{ doc.document_hash }}" target="_blank"
+                                class="btn btn-sm btn-outline-primary w-100"><i class="bi bi-eye me-1"></i> View</a>
+                            <a href="/download_file/{{ doc.document_hash }}"
+                                class="btn btn-sm btn-outline-success w-100"><i class="bi bi-download me-1"></i>
+                                Save</a>
+                        </div>
+                        <a href="/document/{{ doc.document_hash }}"
+                            class="btn btn-sm btn-outline-primary rounded-pill w-100 mt-2">View on Blockchain</a>
                     </div>
                 </div>
-            </a>
+            </div>
         </div>
         {% endfor %}
     </div>

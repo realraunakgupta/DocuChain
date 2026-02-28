@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-5 mt-4">
+    <div class="row pt-5 fade-in-up">
+        <div class="col-lg-8 mx-auto">
+            <h1 class="fw-bold mb-4">Privacy Policy</h1>
+            <p class="text-muted mb-4">Last Updated: February 2026</p>
+
+            <div class="card border-0 shadow-sm p-4 p-md-5 rounded-4 mb-5">
+                <div class="alert alert-info border-0 rounded-3 mb-4">
+                    <i class="bi bi-info-circle me-2"></i> <strong>Note:</strong> DocuChain is currently operating as an
+                    early-stage beta project. We are not yet a registered corporate entity. The following principles
+                    guide our data practices but do not constitute a legally binding agreement at this time.
+                </div>
+
+                <h4 class="fw-bold mt-4 mb-3">1. Data Minimization</h4>
+                <p class="text-muted">DocuChain is designed to operate on a zero-knowledge basis for document contents.
+                    We do not store, view, or process the actual contents of your sensitive documents. We only generate
+                    and store cryptographic hashes (SHA-256) of your files.</p>
+
+                <h4 class="fw-bold mt-4 mb-3">2. Public Ledger</h4>
+                <p class="text-muted">When a document is anchored to the DocuChain ledger, its cryptographic hash and
+                    associated metadata (Issuer Name, Holder Name, Credential ID) become part of a permanent, immutable
+                    public record necessary for verification. This data cannot be deleted or forged.</p>
+
+                <h4 class="fw-bold mt-4 mb-3">3. Personal Information</h4>
+                <p class="text-muted">We collect minimal personal information such as names and optionally, a profile
+                    picture (which is securely stored on our servers and uniquely referenced by its hash). We will never
+                    sell, lease, or distribute your email or personal information to third parties.</p>
+
+                <h4 class="fw-bold mt-4 mb-3">4. Security Practices</h4>
+                <p class="text-muted">We use industry-standard security measures, including bcrypt for password hashing
+                    and secure session tokens, to protect user accounts.</p>
+
+                <div class="mt-5 pt-4 border-top">
+                    <p class="text-muted mb-0 small">For data-related inquiries, please contact the development team
+                        directly.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

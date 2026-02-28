@@ -81,4 +81,78 @@
         </div>
     </div>
 </div>
+
+<!-- HIGHLIGHT FEATURES -->
+<div id="how-it-works" class="row mt-5 pt-4 text-center">
+    <div class="col-12 mb-5">
+        <h2 class="fw-bold fs-3">Immutable trust, zero compromises.</h2>
+        <p class="text-muted mx-auto" style="max-width: 600px;">We leverage distributed ledger technology to ensure that
+            once a document is issued, it can never be altered or forged. This provides a permanent, public, and
+            verifiable record for your most important credentials.</p>
+    </div>
+    <div class="col-md-6 mb-4">
+        <div class="p-4 border rounded-4 shadow-sm h-100 position-relative"
+            style="transition: transform 0.3s ease; border-color: var(--primary-color) !important;"
+            onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+            <i class="bi bi-shield-lock text-primary fs-1 mb-3 d-block"></i>
+            <h4 class="fw-semibold">Enterprise Grade</h4>
+            <p class="text-muted small">Designed for universities, governments, and corporations. Built to scale and
+                withstand cryptographic tampering.</p>
+        </div>
+    </div>
+    <div class="col-md-6 mb-4">
+        <div class="p-4 border rounded-4 shadow-sm h-100 position-relative" style="transition: transform 0.3s ease;"
+            onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+            <i class="bi bi-person-check text-success fs-1 mb-3 d-block"></i>
+            <h4 class="fw-semibold">Data Privacy</h4>
+            <p class="text-muted small">We only store cryptographic hashes. Your sensitive data remains entirely in your
+                physical possession, fulfilling data protection principles.</p>
+        </div>
+    </div>
+</div>
+
+<!-- NEW CTA SECTION -->
+<div class="row mt-5 mb-5 align-items-center bg-light rounded-4 p-5 shadow-sm border">
+    <div class="col-lg-6 mb-4 mb-lg-0">
+        <h2 class="fw-bold mb-3" style="font-size: 2.5rem; letter-spacing: -0.02em;">Ready to secure your documents?
+        </h2>
+        <p class="text-muted mb-4 fs-5">
+            Join thousands of organizations using DocuChain for immutable verification. Protect against fraud with
+            cryptographic certainty.
+        </p>
+        <div class="d-flex flex-wrap gap-3">
+            <a href="/register" class="btn btn-primary rounded-pill px-4 py-3 fw-medium shadow-sm"
+                style="background-color: var(--primary-color); border: none;">Get Started Now</a>
+            <a href="#how-it-works" class="btn btn-outline-dark rounded-pill px-4 py-3 fw-medium">Learn how it works <i
+                    class="bi bi-arrow-up ms-1"></i></a>
+        </div>
+    </div>
+    <div class="col-lg-6 text-center">
+        <div class="position-relative d-inline-block p-4 rounded-4 w-100"
+            style="background: linear-gradient(135deg, #f0f4ff 0%, #e2e8f0 100%); max-width: 450px; overflow: hidden;">
+            <svg viewBox="0 0 200 150" width="100%" height="auto">
+                <path d="M 30,50 L 80,30 L 150,50 L 170,100 L 120,130 L 50,110 Z" fill="none"
+                    stroke="rgba(25, 93, 230, 0.2)" stroke-width="1.5" />
+                <path d="M 30,50 L 120,130" fill="none" stroke="rgba(25, 93, 230, 0.2)" stroke-width="1" />
+                <path d="M 80,30 L 170,100" fill="none" stroke="rgba(25, 93, 230, 0.2)" stroke-width="1" />
+                <path d="M 150,50 L 50,110" fill="none" stroke="rgba(25, 93, 230, 0.2)" stroke-width="1" />
+                <circle cx="30" cy="50" r="3" fill="var(--primary-color)" />
+                <circle cx="80" cy="30" r="3" fill="#60a5fa" />
+                <circle cx="150" cy="50" r="4" fill="var(--primary-color)" />
+                <circle cx="170" cy="100" r="3" fill="#60a5fa" />
+                <circle cx="120" cy="130" r="4" fill="var(--primary-color)" />
+                <circle cx="50" cy="110" r="3" fill="#60a5fa" />
+                <!-- Pulse animations on nodes (simulate with static opacity) -->
+                <circle cx="80" cy="30" r="8" fill="#60a5fa" fill-opacity="0.3" />
+                <circle cx="170" cy="100" r="8" fill="#60a5fa" fill-opacity="0.3" />
+                <circle cx="50" cy="110" r="8" fill="#60a5fa" fill-opacity="0.3" />
+
+                <rect x="85" y="65" width="26" height="20" rx="3" fill="var(--primary-color)" />
+                <rect x="94" y="73" width="8" height="6" rx="1" fill="white" />
+                <path d="M 90,65 V 56 A 8,8 0 0 1 106,56 V 65" fill="none" stroke="var(--primary-color)"
+                    stroke-width="3" />
+            </svg>
+        </div>
+    </div>
+</div>
 {% endblock %}
