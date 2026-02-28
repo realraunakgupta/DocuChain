@@ -10,6 +10,7 @@ Designed with a stunning Apple-inspired minimalist aesthetic, DocuChain eliminat
 - **Instant Verification:** Anyone can upload a document to mathematically verify if it perfectly matches the originally issued file.
 - **Secure Issuing Dashboard:** Institutions can log in securely to grant roles, issue documents, and view issuance history.
 - **Premium Apple-Inspired UI:** A completely responsive, glassmorphic design system using native SF Pro/Inter typography, deep soft-shadows, and elegant spacing.
+- **Native Dark Mode:** A seamlessly integrated intelligent dark mode transitioning shades, backgrounds, and shadows perfectly between light and dark themes according to system preference.
 - **Zero-Storage Architecture:** The system stores *cryptographic hashes* rather than the actual document files, ensuring maximum data privacy and low server costs.
 
 ## 🛠️ Technology Stack
