@@ -143,22 +143,33 @@
 
         function fitImage() {
             const containerSize = 200;
-            // Scale so that the smaller dimension fills container
-            const fitScale = Math.max(containerSize / naturalW, containerSize / naturalH);
-            const w = naturalW * fitScale * scale;
-            const h = naturalH * fitScale * scale;
+            // Scale so that the LARGER dimension fits the container (contain behavior)
+            const containScale = Math.min(containerSize / naturalW, containerSize / naturalH);
+            // Use the contain scale as the base, then apply user zoom on top
+            const w = naturalW * containScale * scale;
+            const h = naturalH * containScale * scale;
 
             previewImg.style.width = w + 'px';
             previewImg.style.height = h + 'px';
 
-            // Clamp position
-            const maxX = 0;
-            const minX = containerSize - w;
-            const maxY = 0;
-            const minY = containerSize - h;
-
-            imgX = Math.min(maxX, Math.max(minX, imgX));
-            imgY = Math.min(maxY, Math.max(minY, imgY));
+            // Center the image if it's smaller than container
+            if (w <= containerSize && h <= containerSize) {
+                // When image fits inside, center it
+                const centerX = (containerSize - w) / 2;
+                const centerY = (containerSize - h) / 2;
+                imgX = Math.min(Math.max(imgX, 0), containerSize - w);
+                imgY = Math.min(Math.max(imgY, 0), containerSize - h);
+                // On first load or reset, center
+                if (scale === 1) { imgX = centerX; imgY = centerY; }
+            } else {
+                // When zoomed in past the container, clamp so no empty edges
+                const maxX = 0;
+                const minX = containerSize - w;
+                const maxY = 0;
+                const minY = containerSize - h;
+                imgX = Math.min(maxX, Math.max(minX, imgX));
+                imgY = Math.min(maxY, Math.max(minY, imgY));
+            }
 
             previewImg.style.left = imgX + 'px';
             previewImg.style.top = imgY + 'px';
