@@ -71,7 +71,8 @@
                             style="accent-color: #195de6;">
                         <i class="bi bi-zoom-in" style="color: var(--bs-secondary-color);"></i>
                     </div>
-                    <p class="mt-2 small" style="color: var(--bs-secondary-color);">
+                    <p class="mt-1 small fw-semibold" id="zoom-label" style="color: #195de6;">100%</p>
+                    <p class="mt-1 small" style="color: var(--bs-secondary-color);">
                         Use the slider to zoom, then drag the image to position it.
                     </p>
                 </div>
@@ -152,17 +153,16 @@
             previewImg.style.width = w + 'px';
             previewImg.style.height = h + 'px';
 
-            // Center the image if it's smaller than container
+            // Center the image within the container
+            const centerX = (containerSize - w) / 2;
+            const centerY = (containerSize - h) / 2;
+
             if (w <= containerSize && h <= containerSize) {
-                // When image fits inside, center it
-                const centerX = (containerSize - w) / 2;
-                const centerY = (containerSize - h) / 2;
-                imgX = Math.min(Math.max(imgX, 0), containerSize - w);
-                imgY = Math.min(Math.max(imgY, 0), containerSize - h);
-                // On first load or reset, center
-                if (scale === 1) { imgX = centerX; imgY = centerY; }
+                // Image fits inside — always center it
+                imgX = centerX;
+                imgY = centerY;
             } else {
-                // When zoomed in past the container, clamp so no empty edges
+                // Zoomed past container — clamp so no empty edges
                 const maxX = 0;
                 const minX = containerSize - w;
                 const maxY = 0;
@@ -177,6 +177,7 @@
 
         zoomSlider.addEventListener('input', function () {
             scale = this.value / 100;
+            document.getElementById('zoom-label').textContent = this.value + '%';
             fitImage();
         });
 
