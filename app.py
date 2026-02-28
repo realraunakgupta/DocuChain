@@ -12,6 +12,9 @@ app = Flask(__name__)
 app.secret_key = 'docuchain_offline_demo_secret'  # Flash requires a secret key
 blockchain = Blockchain()
 
+# Ensure uploads directory exists on cloud environment
+os.makedirs(os.path.join(app.root_path, 'static', 'uploads'), exist_ok=True)
+
 USERS_FILE = 'users.json'
 
 def load_users():
@@ -96,6 +99,7 @@ def issue():
             ext = '.pdf'
         doc_filename = f"doc_{doc_hash}{ext}"
         doc_path = os.path.join(app.root_path, 'static', 'uploads', doc_filename)
+        os.makedirs(os.path.dirname(doc_path), exist_ok=True)
         with open(doc_path, 'wb') as f:
             f.write(file_data)
         
