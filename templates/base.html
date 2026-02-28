@@ -73,7 +73,7 @@
                             {% if current_user and current_user.get('avatar') %}
                             <img src="/static/uploads/{{ current_user.get('avatar') }}" alt="Profile"
                                 class="rounded-circle me-2 border border-secondary"
-                                style="width: 35px; height: 35px; object-fit: cover;">
+                                style="width: 35px; height: 35px; object-fit: contain; background-color: #f0f0f0;">
                             {% else %}
                             <div class="rounded-circle me-2 bg-secondary text-white d-flex align-items-center justify-content-center"
                                 style="width: 35px; height: 35px;">
