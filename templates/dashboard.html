@@ -162,9 +162,11 @@
                     <div class="card-body mt-2">
                         <div class="bg-light p-3 rounded-3 text-center">
                             <p class="mb-1 text-uppercase small fw-bold text-muted">Digital Signature</p>
-                            <p class="font-monospace mb-0 text-success small text-truncate"
+                            <p class="font-monospace mb-2 text-success small text-truncate"
                                 title="{{ doc.document_hash }}">
                                 {{ doc.document_hash[:20] }}...{{ doc.document_hash[-10:] }}</p>
+                            <a href="/document/{{ doc.document_hash }}"
+                                class="btn btn-sm btn-outline-primary rounded-pill w-100 mt-2">View on Blockchain</a>
                         </div>
                     </div>
                 </div>
