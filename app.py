@@ -166,7 +166,7 @@ def request_verification():
         if not ext:
             ext = '.pdf'
         safe_filename = f"doc_{doc_hash}{ext}"
-        filepath = os.path.join('static', 'uploads', safe_filename)
+        filepath = os.path.join(app.root_path, 'static', 'uploads', safe_filename)
         
         with open(filepath, 'wb') as f:
             f.write(file_data)
@@ -207,7 +207,7 @@ def approve_request(req_id):
         return redirect(url_for('dashboard'))
         
     # Read the file and hash it
-    filepath = os.path.join('static', 'uploads', req['file_path'])
+    filepath = os.path.join(app.root_path, 'static', 'uploads', req['file_path'])
     if not os.path.exists(filepath):
         flash("Document file missing from server.", "danger")
         return redirect(url_for('dashboard'))
@@ -443,7 +443,7 @@ def profile():
         if not ext:
             ext = '.jpg'
         safe_filename = f"{photo_hash}{ext}"
-        filepath = os.path.join('static', 'uploads', safe_filename)
+        filepath = os.path.join(app.root_path, 'static', 'uploads', safe_filename)
         
         with open(filepath, 'wb') as f:
             f.write(file_data)
