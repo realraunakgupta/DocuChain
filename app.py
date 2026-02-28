@@ -295,8 +295,9 @@ def verify():
         qr_base64 = None
         formatted_date = None
         if matching_block:
-            from datetime import datetime
-            formatted_date = datetime.fromtimestamp(matching_block.timestamp).strftime('%B %d, %Y')
+            from datetime import datetime, timezone, timedelta
+            ist = timezone(timedelta(hours=5, minutes=30))
+            formatted_date = datetime.fromtimestamp(matching_block.timestamp, ist).strftime('%B %d, %Y')
             
             # Generate QR Code containing metadata
             qr_data = (f"DocuChain Verified\n"
@@ -326,12 +327,13 @@ def chain():
     is_valid = blockchain.verify_chain()
     
     chain_data = []
-    from datetime import datetime
+    from datetime import datetime, timezone, timedelta
+    ist = timezone(timedelta(hours=5, minutes=30))
     is_logged_in = 'user' in session
     
     for b in blockchain.chain:
         b_dict = b.to_dict()
-        formatted_date = datetime.fromtimestamp(b.timestamp).strftime('%B %d, %Y - %I:%M %p')
+        formatted_date = datetime.fromtimestamp(b.timestamp, ist).strftime('%B %d, %Y - %I:%M %p')
         
         # Privacy Censorship for unauthenticated users
         if not is_logged_in and b.index != 0:
@@ -511,8 +513,9 @@ def view_document(doc_hash):
         return redirect(url_for('index'))
         
     # Format the timestamp for nice UI display
-    from datetime import datetime
-    formatted_date = datetime.fromtimestamp(matching_block.timestamp).strftime('%B %d, %Y')
+    from datetime import datetime, timezone, timedelta
+    ist = timezone(timedelta(hours=5, minutes=30))
+    formatted_date = datetime.fromtimestamp(matching_block.timestamp, ist).strftime('%B %d, %Y')
 
     qr_base64 = None
     # Generate QR Code containing metadata

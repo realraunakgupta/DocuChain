@@ -9,7 +9,18 @@
     <!-- Try local bootstrap first, fallback to CDN if not available -->
     <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap.min.css') }}"
         onerror="this.onerror=null;this.href='https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css';">
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=1.1">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=1.3">
+    <!-- Dark Mode Init -->
+    <script>
+        (function () {
+            var theme = localStorage.getItem('theme');
+            if (theme === 'dark' || (theme !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.setAttribute('data-bs-theme', 'dark');
+            } else {
+                document.documentElement.setAttribute('data-bs-theme', 'light');
+            }
+        })();
+    </script>
 </head>
 
 <body>
@@ -23,21 +34,38 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav mx-auto mb-2 mb-lg-0 align-items-center gap-3" style="font-size: 0.95rem;">
                     <li class="nav-item">
-                        <a class="nav-link text-dark" href="/issue">Issue Document</a>
+                        <a class="nav-link theme-text" href="/issue">Issue Document</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" href="/verify">Verify Document</a>
+                        <a class="nav-link theme-text" href="/verify">Verify Document</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" href="/chain">View Blockchain</a>
+                        <a class="nav-link theme-text" href="/chain">View Blockchain</a>
                     </li>
                 </ul>
                 <ul class="navbar-nav mb-2 mb-lg-0 align-items-center">
-
+                    <li class="nav-item me-2 d-flex align-items-center">
+                        <button id="theme-toggle" class="btn btn-sm btn-outline-secondary rounded-circle"
+                            style="width: 35px; height: 35px; padding: 0; display: flex; align-items: center; justify-content: center;"
+                            type="button" aria-label="Toggle theme">
+                            <svg id="theme-icon-sun" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                fill="currentColor" class="bi bi-sun-fill d-none" viewBox="0 0 16 16">
+                                <path
+                                    d="M8 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8M8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0m0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13m8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5M3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8m10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0m-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0m9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707M4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708z" />
+                            </svg>
+                            <svg id="theme-icon-moon" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                fill="currentColor" class="bi bi-moon-stars-fill d-none" viewBox="0 0 16 16">
+                                <path
+                                    d="M6 .278a.768.768 0 0 1 .08.858 7.208 7.208 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277.527 0 1.04-.055 1.533-.16a.787.787 0 0 1 .81.316.733.733 0 0 1-.031.893A8.349 8.349 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.752.752 0 0 1 6 .278" />
+                                <path
+                                    d="M10.794 3.148a.217.217 0 0 1 .412 0l.387 1.162c.173.518.579.924 1.097 1.097l1.162.387a.217.217 0 0 1 0 .412l-1.162.387a1.734 1.734 0 0 0-1.097 1.097l-.387 1.162a.217.217 0 0 1-.412 0l-.387-1.162A1.734 1.734 0 0 0 9.31 6.593l-1.162-.387a.217.217 0 0 1 0-.412l1.162-.387a1.734 1.734 0 0 0 1.097-1.097l.387-1.162zM13.863.099a.145.145 0 0 1 .274 0l.258.774c.115.346.386.617.732.732l.774.258a.145.145 0 0 1 0 .274l-.774.258a1.156 1.156 0 0 0-.732.732l-.258.774a.145.145 0 0 1-.274 0l-.258-.774a1.156 1.156 0 0 0-.732-.732l-.774-.258a.145.145 0 0 1 0-.274l.774-.258c.346-.115.617-.386.732-.732L13.863.1z" />
+                            </svg>
+                        </button>
+                    </li>
                     {% if session.get('user') %}
                     <li class="nav-item">
-                        <a class="nav-link text-warning fw-bold" href="/dashboard"><i
-                                class="bi bi-speedometer2 me-1"></i> Dashboard</a>
+                        <a class="nav-link theme-text fw-bold" href="/dashboard"><i class="bi bi-speedometer2 me-1"></i>
+                            Dashboard</a>
                     </li>
                     <li class="nav-item dropdown ms-lg-3 mt-2 mt-lg-0">
                         <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="navbarDropdown"
@@ -52,7 +80,7 @@
                                 <i class="bi bi-person-fill"></i>
                             </div>
                             {% endif %}
-                            <span class="fw-medium text-dark">{{ session['user'] }}</span>
+                            <span class="fw-medium theme-text">{{ session['user'] }}</span>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2"
                             aria-labelledby="navbarDropdown">
@@ -92,14 +120,14 @@
     </div>
 
     <!-- Footer Start -->
-    <footer class="bg-white border-top py-4 mt-auto w-100 pb-3 pt-4">
+    <footer class="bg-body-tertiary border-top py-4 mt-auto w-100 pb-3 pt-4">
         <div class="container mt-2">
             <div class="row align-items-center mb-3">
                 <div
                     class="col-md-3 text-center text-md-start mb-3 mb-md-0 d-flex align-items-center justify-content-center justify-content-md-start">
                     <img src="{{ url_for('static', filename='favicon.svg') }}" width="24" height="24" class="me-2"
                         alt="DocuChain Logo">
-                    <span class="fw-bold text-dark w-100 d-inline-block text-start"
+                    <span class="fw-bold theme-text w-100 d-inline-block text-start"
                         style="font-size: 1.15rem; letter-spacing: -0.01em;">DocuChain</span>
                 </div>
                 <div class="col-md-6 text-center mb-3 mb-md-0">
@@ -142,6 +170,47 @@
     <!-- Footer End -->
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const toggleBtn = document.getElementById('theme-toggle');
+            const iconSun = document.getElementById('theme-icon-sun');
+            const iconMoon = document.getElementById('theme-icon-moon');
+
+            const getPreferredTheme = () => {
+                const storedTheme = localStorage.getItem('theme');
+                if (storedTheme) {
+                    return storedTheme;
+                }
+                return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            };
+
+            const setTheme = (theme) => {
+                document.documentElement.setAttribute('data-bs-theme', theme);
+                if (theme === 'dark') {
+                    iconSun.classList.remove('d-none');
+                    iconMoon.classList.add('d-none');
+                } else {
+                    iconSun.classList.add('d-none');
+                    iconMoon.classList.remove('d-none');
+                }
+            };
+
+            setTheme(getPreferredTheme());
+
+            toggleBtn.addEventListener('click', () => {
+                const currentTheme = document.documentElement.getAttribute('data-bs-theme');
+                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                localStorage.setItem('theme', newTheme);
+                setTheme(newTheme);
+            });
+
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+                if (!localStorage.getItem('theme')) {
+                    setTheme(getPreferredTheme());
+                }
+            });
+        });
+    </script>
 </body>
 
 </html>
