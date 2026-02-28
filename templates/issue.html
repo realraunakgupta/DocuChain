@@ -13,11 +13,34 @@
                     </div>
                     <div class="mb-3">
                         <label for="document_type" class="form-label">Document Type</label>
-                        <select class="form-select" id="document_type" name="document_type" required>
+                        <select class="form-select" id="document_type_select" name="document_type" required
+                            onchange="toggleCustomDocType(this)">
                             <option value="">Select a type...</option>
-                            <option value="Academic Certificate">Academic Certificate</option>
-                            <option value="Medical Certificate">Medical Certificate</option>
+                            <optgroup label="Academic & Educational">
+                                <option value="Academic Certificate">Academic Certificate</option>
+                                <option value="Course Completion">Course Completion</option>
+                            </optgroup>
+                            <optgroup label="Events & Competitions">
+                                <option value="Hackathon Certificate">Hackathon Certificate</option>
+                                <option value="Ideathon Certificate">Ideathon Certificate</option>
+                                <option value="Participation Certificate">Participation Certificate</option>
+                            </optgroup>
+                            <optgroup label="Medical">
+                                <option value="Medical Certificate">Medical Certificate</option>
+                            </optgroup>
+                            <optgroup label="Professional">
+                                <option value="Internship Certificate">Internship Certificate</option>
+                                <option value="Letter of Recommendation">Letter of Recommendation</option>
+                            </optgroup>
+                            <optgroup label="Sports & Athletics">
+                                <option value="Sports/Athletics Certificate">Sports/Athletics Certificate</option>
+                            </optgroup>
+                            <optgroup label="Other">
+                                <option value="Other">Other (Specify below)</option>
+                            </optgroup>
                         </select>
+                        <input type="text" class="form-control mt-2 d-none" id="custom_document_type"
+                            placeholder="Please specify custom document type..." disabled required>
                     </div>
                     <div class="mb-3">
                         <label for="student_name" class="form-label fw-bold">Student / Holder Name</label>
@@ -71,4 +94,21 @@
         {% endif %}
     </div>
 </div>
+
+<script>
+    function toggleCustomDocType(select) {
+        const customInput = document.getElementById('custom_document_type');
+        if (select.value === 'Other') {
+            customInput.classList.remove('d-none');
+            customInput.disabled = false;
+            customInput.setAttribute('name', 'document_type');
+            select.removeAttribute('name');
+        } else {
+            customInput.classList.add('d-none');
+            customInput.disabled = true;
+            customInput.removeAttribute('name');
+            select.setAttribute('name', 'document_type');
+        }
+    }
+</script>
 {% endblock %}
