@@ -64,11 +64,11 @@ Designed with an Apple-inspired minimalist aesthetic, DocuChain eliminates the p
 
 Create a `.env` file in the project root with the following variables:
 
-| Variable | Description | Example |
-|----------|-------------|---------|
-| `MONGO_URI` | MongoDB Atlas connection string | `mongodb+srv://user:pass@cluster.mongodb.net/` |
-| `CLOUDINARY_URL` | Cloudinary API URL (found in your dashboard) | `cloudinary://API_KEY:API_SECRET@CLOUD_NAME` |
-| `SECRET_KEY` | Flask session secret key (any strong random string) | `my-super-secret-key-123` |
+| Variable | Description | Where to find it |
+|----------|-------------|-----------------|
+| `MONGO_URI` | MongoDB Atlas connection string | MongoDB Atlas → Connect → Drivers |
+| `CLOUDINARY_URL` | Cloudinary API environment variable | Cloudinary Dashboard → Account Details |
+| `SECRET_KEY` | Flask session secret key (any strong random string) | Generate your own |
 
 > **Note:** The `.env` file is included in `.gitignore` and will never be committed to the repository.
 
