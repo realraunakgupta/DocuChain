@@ -71,12 +71,17 @@ class Blockchain:
         self.chain = []
 
     def load_chain(self):
-        docs = list(blockchain_collection.find().sort([("index", 1)]))
-        if docs:
-            self.chain = [Block.from_dict(b) for b in docs]
-        else:
-            self.chain = []
-            self.create_genesis_block()
+        try:
+            docs = list(blockchain_collection.find().sort([("index", 1)]))
+            if docs:
+                self.chain = [Block.from_dict(b) for b in docs]
+            else:
+                self.chain = []
+                self.create_genesis_block()
+        except Exception:
+            # If MongoDB is unreachable, keep whatever chain data we have
+            if not self.chain:
+                self.chain = []
 
     def save_chain(self):
         # We don't overwrite everything anymore. Instead, we insert blocks as we add them.

@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, flash, session, redirect, url_for
+from flask import Flask, render_template, request, flash, session, redirect, url_for, jsonify
 from blockchain import Blockchain
 import hashlib
 import os
@@ -38,9 +38,16 @@ def calculate_file_hash(file_data):
 @app.context_processor
 def inject_user_data():
     if 'user' in session:
-        user_data = users_collection.find_one({"_id": session['user']}) or {}
-        return dict(current_user=user_data)
+        try:
+            user_data = users_collection.find_one({"_id": session['user']}) or {}
+            return dict(current_user=user_data)
+        except Exception:
+            return dict(current_user=None)
     return dict(current_user=None)
+
+@app.route('/health')
+def health():
+    return jsonify({"status": "ok"}), 200
 
 @app.route('/')
 def index():
