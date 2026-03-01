@@ -69,7 +69,6 @@ class Block:
 class Blockchain:
     def __init__(self):
         self.chain = []
-        self.load_chain()
 
     def load_chain(self):
         docs = list(blockchain_collection.find().sort([("index", 1)]))
